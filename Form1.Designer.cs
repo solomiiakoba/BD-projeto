@@ -29,13 +29,14 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.painel14 = new Component.Painel1();
+            this.userBtn = new Component.Button();
+            this.cartBtn = new Component.Button();
+            this.notifyBtn = new Component.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.label6 = new System.Windows.Forms.Label();
-            this.painel12 = new Component.Painel1();
-            this.cancelBtn = new Component.Button();
-            this.searchLab = new System.Windows.Forms.Label();
             this.button2 = new Component.Button();
             this.painel13 = new Component.Painel1();
+            this.label6 = new System.Windows.Forms.Label();
             this.painel11 = new Component.Painel1();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -43,10 +44,9 @@
             this.button1 = new Component.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.painel14 = new Component.Painel1();
-            this.userBtn = new Component.Button();
-            this.cartBtn = new Component.Button();
-            this.notifyBtn = new Component.Button();
+            this.painel12 = new Component.Painel1();
+            this.cancelBtn = new Component.Button();
+            this.searchLab = new System.Windows.Forms.Label();
             this.MenuPanel = new Component.Painel1();
             this.label1 = new System.Windows.Forms.Label();
             this.Art = new System.Windows.Forms.Label();
@@ -55,11 +55,11 @@
             this.ArtistsButton = new Component.Button();
             this.Homebtn = new Component.Button();
             this.panel1.SuspendLayout();
+            this.painel14.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.painel12.SuspendLayout();
             this.painel11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.painel14.SuspendLayout();
+            this.painel12.SuspendLayout();
             this.MenuPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,206 +70,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1029, 79);
             this.panel1.TabIndex = 1;
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.button2);
-            this.panel2.Controls.Add(this.painel13);
-            this.panel2.Controls.Add(this.label6);
-            this.panel2.Controls.Add(this.painel11);
-            this.panel2.Location = new System.Drawing.Point(128, 98);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1029, 482);
-            this.panel2.TabIndex = 2;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Tahoma", 14F);
-            this.label6.Location = new System.Drawing.Point(3, 178);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(205, 29);
-            this.label6.TabIndex = 6;
-            this.label6.Text = "Nossas categorias";
-            this.label6.Click += new System.EventHandler(this.label6_Click);
-            // 
-            // painel12
-            // 
-            this.painel12.BackColor = System.Drawing.Color.White;
-            this.painel12.BorderRadius = 30;
-            this.painel12.Controls.Add(this.cancelBtn);
-            this.painel12.Controls.Add(this.searchLab);
-            this.painel12.ForeColor = System.Drawing.Color.Black;
-            this.painel12.GradientAngle = 140F;
-            this.painel12.GradientBottomColor = System.Drawing.Color.Transparent;
-            this.painel12.GradientTopColor = System.Drawing.Color.Transparent;
-            this.painel12.Location = new System.Drawing.Point(131, 18);
-            this.painel12.Name = "painel12";
-            this.painel12.Size = new System.Drawing.Size(790, 57);
-            this.painel12.TabIndex = 3;
-            // 
-            // cancelBtn
-            // 
-            this.cancelBtn.BackColor = System.Drawing.Color.Transparent;
-            this.cancelBtn.BackgroundColor = System.Drawing.Color.Transparent;
-            this.cancelBtn.BorderColor = System.Drawing.Color.MistyRose;
-            this.cancelBtn.BorderRadius = 60;
-            this.cancelBtn.BorderSize = 0;
-            this.cancelBtn.ButtonImage = global::App.Properties.Resources.xmark_solid__1_;
-            this.cancelBtn.ButtonText = "";
-            this.cancelBtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.cancelBtn.GradientAngle = 90F;
-            this.cancelBtn.GradientBottomColor = System.Drawing.Color.Transparent;
-            this.cancelBtn.GradientTopColor = System.Drawing.Color.Transparent;
-            this.cancelBtn.IsSelected = false;
-            this.cancelBtn.Location = new System.Drawing.Point(751, 3);
-            this.cancelBtn.Name = "cancelBtn";
-            this.cancelBtn.Size = new System.Drawing.Size(36, 59);
-            this.cancelBtn.TabIndex = 7;
-            this.cancelBtn.TextColor = System.Drawing.Color.Transparent;
-            // 
-            // searchLab
-            // 
-            this.searchLab.AutoSize = true;
-            this.searchLab.BackColor = System.Drawing.Color.Transparent;
-            this.searchLab.Font = new System.Drawing.Font("Dubai", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.searchLab.ForeColor = System.Drawing.Color.Black;
-            this.searchLab.Location = new System.Drawing.Point(15, 14);
-            this.searchLab.Name = "searchLab";
-            this.searchLab.Size = new System.Drawing.Size(69, 34);
-            this.searchLab.TabIndex = 6;
-            this.searchLab.Text = "Search";
-            // 
-            // button2
-            // 
-            this.button2.BackgroundColor = System.Drawing.Color.Transparent;
-            this.button2.BorderColor = System.Drawing.Color.Firebrick;
-            this.button2.BorderRadius = 30;
-            this.button2.BorderSize = 0;
-            this.button2.ButtonImage = global::App.Properties.Resources.circle_chevron_right_solid;
-            this.button2.ButtonText = "Ver Todas";
-            this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button2.Font = new System.Drawing.Font("Tahoma", 10F);
-            this.button2.GradientAngle = 90F;
-            this.button2.GradientBottomColor = System.Drawing.Color.Transparent;
-            this.button2.GradientTopColor = System.Drawing.Color.Transparent;
-            this.button2.IsSelected = false;
-            this.button2.Location = new System.Drawing.Point(898, 412);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(128, 70);
-            this.button2.TabIndex = 0;
-            this.button2.TextColor = System.Drawing.Color.Brown;
-            this.button2.Paint += new System.Windows.Forms.PaintEventHandler(this.button2_Paint_2);
-            // 
-            // painel13
-            // 
-            this.painel13.BackColor = System.Drawing.Color.White;
-            this.painel13.BorderRadius = 30;
-            this.painel13.ForeColor = System.Drawing.Color.Black;
-            this.painel13.GradientAngle = 140F;
-            this.painel13.GradientBottomColor = System.Drawing.Color.Transparent;
-            this.painel13.GradientTopColor = System.Drawing.Color.Transparent;
-            this.painel13.Location = new System.Drawing.Point(0, 210);
-            this.painel13.Name = "painel13";
-            this.painel13.Size = new System.Drawing.Size(1026, 199);
-            this.painel13.TabIndex = 4;
-            this.painel13.Paint += new System.Windows.Forms.PaintEventHandler(this.painel13_Paint);
-            // 
-            // painel11
-            // 
-            this.painel11.BackColor = System.Drawing.Color.LightCoral;
-            this.painel11.BorderRadius = 30;
-            this.painel11.Controls.Add(this.label5);
-            this.painel11.Controls.Add(this.label4);
-            this.painel11.Controls.Add(this.pictureBox1);
-            this.painel11.Controls.Add(this.button1);
-            this.painel11.Controls.Add(this.label3);
-            this.painel11.Controls.Add(this.label2);
-            this.painel11.ForeColor = System.Drawing.Color.Black;
-            this.painel11.GradientAngle = 140F;
-            this.painel11.GradientBottomColor = System.Drawing.Color.Transparent;
-            this.painel11.GradientTopColor = System.Drawing.Color.Transparent;
-            this.painel11.Location = new System.Drawing.Point(0, -5);
-            this.painel11.Name = "painel11";
-            this.painel11.Size = new System.Drawing.Size(1026, 157);
-            this.painel11.TabIndex = 5;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.BackColor = System.Drawing.Color.Transparent;
-            this.label5.Font = new System.Drawing.Font("Kristen ITC", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(857, 35);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(50, 24);
-            this.label5.TabIndex = 7;
-            this.label5.Text = "Flow";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.BackColor = System.Drawing.Color.Transparent;
-            this.label4.Font = new System.Drawing.Font("Kristen ITC", 15.2F);
-            this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(804, 39);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(62, 36);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Art";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::App.Properties.Resources.OIP_removebg_preview;
-            this.pictureBox1.Location = new System.Drawing.Point(661, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(230, 164);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
-            // button1
-            // 
-            this.button1.BackgroundColor = System.Drawing.Color.Transparent;
-            this.button1.BorderColor = System.Drawing.Color.Firebrick;
-            this.button1.BorderRadius = 30;
-            this.button1.BorderSize = 0;
-            this.button1.ButtonImage = null;
-            this.button1.ButtonText = "Personalizar";
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.Font = new System.Drawing.Font("Tahoma", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.GradientAngle = 90F;
-            this.button1.GradientBottomColor = System.Drawing.Color.Maroon;
-            this.button1.GradientTopColor = System.Drawing.Color.Maroon;
-            this.button1.IsSelected = false;
-            this.button1.Location = new System.Drawing.Point(189, 85);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(101, 49);
-            this.button1.TabIndex = 2;
-            this.button1.TextColor = System.Drawing.Color.White;
-            this.button1.Paint += new System.Windows.Forms.PaintEventHandler(this.button1_Paint);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Tahoma", 10F);
-            this.label3.Location = new System.Drawing.Point(137, 57);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(229, 21);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Personaliza a sua encomenda\r\n";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Monotype Corsiva", 22.2F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(16, 20);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(540, 45);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Onde a criatividade encontra expressão!\r\n";
             // 
             // painel14
             // 
@@ -346,6 +146,206 @@
             this.notifyBtn.Size = new System.Drawing.Size(56, 59);
             this.notifyBtn.TabIndex = 6;
             this.notifyBtn.TextColor = System.Drawing.Color.Transparent;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.button2);
+            this.panel2.Controls.Add(this.painel13);
+            this.panel2.Controls.Add(this.label6);
+            this.panel2.Controls.Add(this.painel11);
+            this.panel2.Location = new System.Drawing.Point(128, 98);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1029, 482);
+            this.panel2.TabIndex = 2;
+            // 
+            // button2
+            // 
+            this.button2.BackgroundColor = System.Drawing.Color.Transparent;
+            this.button2.BorderColor = System.Drawing.Color.Firebrick;
+            this.button2.BorderRadius = 30;
+            this.button2.BorderSize = 0;
+            this.button2.ButtonImage = global::App.Properties.Resources.circle_chevron_right_solid;
+            this.button2.ButtonText = "Voltar";
+            this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button2.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.button2.GradientAngle = 90F;
+            this.button2.GradientBottomColor = System.Drawing.Color.Transparent;
+            this.button2.GradientTopColor = System.Drawing.Color.Transparent;
+            this.button2.IsSelected = false;
+            this.button2.Location = new System.Drawing.Point(898, 412);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(128, 70);
+            this.button2.TabIndex = 0;
+            this.button2.TextColor = System.Drawing.Color.Brown;
+            this.button2.Paint += new System.Windows.Forms.PaintEventHandler(this.button2_Paint_2);
+            // 
+            // painel13
+            // 
+            this.painel13.BackColor = System.Drawing.Color.White;
+            this.painel13.BorderRadius = 30;
+            this.painel13.ForeColor = System.Drawing.Color.Black;
+            this.painel13.GradientAngle = 140F;
+            this.painel13.GradientBottomColor = System.Drawing.Color.Transparent;
+            this.painel13.GradientTopColor = System.Drawing.Color.Transparent;
+            this.painel13.Location = new System.Drawing.Point(0, 210);
+            this.painel13.Name = "painel13";
+            this.painel13.Size = new System.Drawing.Size(1026, 199);
+            this.painel13.TabIndex = 4;
+            this.painel13.Paint += new System.Windows.Forms.PaintEventHandler(this.painel13_Paint);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Tahoma", 14F);
+            this.label6.Location = new System.Drawing.Point(3, 178);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(205, 29);
+            this.label6.TabIndex = 6;
+            this.label6.Text = "Nossas categorias";
+            this.label6.Click += new System.EventHandler(this.label6_Click);
+            // 
+            // painel11
+            // 
+            this.painel11.BackColor = System.Drawing.Color.LightCoral;
+            this.painel11.BorderRadius = 30;
+            this.painel11.Controls.Add(this.label5);
+            this.painel11.Controls.Add(this.label4);
+            this.painel11.Controls.Add(this.pictureBox1);
+            this.painel11.Controls.Add(this.button1);
+            this.painel11.Controls.Add(this.label3);
+            this.painel11.Controls.Add(this.label2);
+            this.painel11.ForeColor = System.Drawing.Color.Black;
+            this.painel11.GradientAngle = 140F;
+            this.painel11.GradientBottomColor = System.Drawing.Color.Transparent;
+            this.painel11.GradientTopColor = System.Drawing.Color.Transparent;
+            this.painel11.Location = new System.Drawing.Point(0, 8);
+            this.painel11.Name = "painel11";
+            this.painel11.Size = new System.Drawing.Size(1026, 144);
+            this.painel11.TabIndex = 5;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.BackColor = System.Drawing.Color.Transparent;
+            this.label5.Font = new System.Drawing.Font("Kristen ITC", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = System.Drawing.Color.White;
+            this.label5.Location = new System.Drawing.Point(857, 35);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(50, 24);
+            this.label5.TabIndex = 7;
+            this.label5.Text = "Flow";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.BackColor = System.Drawing.Color.Transparent;
+            this.label4.Font = new System.Drawing.Font("Kristen ITC", 15.2F);
+            this.label4.ForeColor = System.Drawing.Color.White;
+            this.label4.Location = new System.Drawing.Point(804, 39);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(62, 36);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "Art";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::App.Properties.Resources.OIP_removebg_preview;
+            this.pictureBox1.Location = new System.Drawing.Point(661, 1);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(230, 161);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
+            // button1
+            // 
+            this.button1.BackgroundColor = System.Drawing.Color.Transparent;
+            this.button1.BorderColor = System.Drawing.Color.Firebrick;
+            this.button1.BorderRadius = 30;
+            this.button1.BorderSize = 0;
+            this.button1.ButtonImage = null;
+            this.button1.ButtonText = "Personalizar";
+            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button1.Font = new System.Drawing.Font("Tahoma", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.GradientAngle = 90F;
+            this.button1.GradientBottomColor = System.Drawing.Color.Maroon;
+            this.button1.GradientTopColor = System.Drawing.Color.Maroon;
+            this.button1.IsSelected = false;
+            this.button1.Location = new System.Drawing.Point(189, 85);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(101, 49);
+            this.button1.TabIndex = 2;
+            this.button1.TextColor = System.Drawing.Color.White;
+            this.button1.Paint += new System.Windows.Forms.PaintEventHandler(this.button1_Paint);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Tahoma", 10F);
+            this.label3.Location = new System.Drawing.Point(137, 57);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(229, 21);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Personaliza a sua encomenda\r\n";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Monotype Corsiva", 22.2F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(16, 20);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(540, 45);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Onde a criatividade encontra expressão!\r\n";
+            // 
+            // painel12
+            // 
+            this.painel12.BackColor = System.Drawing.Color.White;
+            this.painel12.BorderRadius = 30;
+            this.painel12.Controls.Add(this.cancelBtn);
+            this.painel12.Controls.Add(this.searchLab);
+            this.painel12.ForeColor = System.Drawing.Color.Black;
+            this.painel12.GradientAngle = 140F;
+            this.painel12.GradientBottomColor = System.Drawing.Color.Transparent;
+            this.painel12.GradientTopColor = System.Drawing.Color.Transparent;
+            this.painel12.Location = new System.Drawing.Point(131, 18);
+            this.painel12.Name = "painel12";
+            this.painel12.Size = new System.Drawing.Size(790, 57);
+            this.painel12.TabIndex = 3;
+            // 
+            // cancelBtn
+            // 
+            this.cancelBtn.BackColor = System.Drawing.Color.Transparent;
+            this.cancelBtn.BackgroundColor = System.Drawing.Color.Transparent;
+            this.cancelBtn.BorderColor = System.Drawing.Color.MistyRose;
+            this.cancelBtn.BorderRadius = 60;
+            this.cancelBtn.BorderSize = 0;
+            this.cancelBtn.ButtonImage = global::App.Properties.Resources.xmark_solid__1_;
+            this.cancelBtn.ButtonText = "";
+            this.cancelBtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.cancelBtn.GradientAngle = 90F;
+            this.cancelBtn.GradientBottomColor = System.Drawing.Color.Transparent;
+            this.cancelBtn.GradientTopColor = System.Drawing.Color.Transparent;
+            this.cancelBtn.IsSelected = false;
+            this.cancelBtn.Location = new System.Drawing.Point(751, 3);
+            this.cancelBtn.Name = "cancelBtn";
+            this.cancelBtn.Size = new System.Drawing.Size(36, 59);
+            this.cancelBtn.TabIndex = 7;
+            this.cancelBtn.TextColor = System.Drawing.Color.Transparent;
+            // 
+            // searchLab
+            // 
+            this.searchLab.AutoSize = true;
+            this.searchLab.BackColor = System.Drawing.Color.Transparent;
+            this.searchLab.Font = new System.Drawing.Font("Dubai", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.searchLab.ForeColor = System.Drawing.Color.Black;
+            this.searchLab.Location = new System.Drawing.Point(15, 14);
+            this.searchLab.Name = "searchLab";
+            this.searchLab.Size = new System.Drawing.Size(69, 34);
+            this.searchLab.TabIndex = 6;
+            this.searchLab.Text = "Search";
             // 
             // MenuPanel
             // 
@@ -496,16 +496,17 @@
             this.Padding = new System.Windows.Forms.Padding(10);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.Click += new System.EventHandler(this.BtnClick);
             this.panel1.ResumeLayout(false);
+            this.painel14.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.painel12.ResumeLayout(false);
-            this.painel12.PerformLayout();
             this.painel11.ResumeLayout(false);
             this.painel11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.painel14.ResumeLayout(false);
+            this.painel12.ResumeLayout(false);
+            this.painel12.PerformLayout();
             this.MenuPanel.ResumeLayout(false);
             this.MenuPanel.PerformLayout();
             this.ResumeLayout(false);
