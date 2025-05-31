@@ -83,6 +83,16 @@ namespace App.Properties {
         /// <summary>
         ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap circle_check_solid {
+            get {
+                object obj = ResourceManager.GetObject("circle-check-solid", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap circle_chevron_right_solid {
             get {
                 object obj = ResourceManager.GetObject("circle-chevron-right-solid", resourceCulture);
@@ -96,6 +106,16 @@ namespace App.Properties {
         internal static System.Drawing.Bitmap graduation_cap_solid {
             get {
                 object obj = ResourceManager.GetObject("graduation-cap-solid", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap heart_regular__1_ {
+            get {
+                object obj = ResourceManager.GetObject("heart-regular-_1_", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -166,6 +186,16 @@ namespace App.Properties {
         internal static System.Drawing.Bitmap paintbrush_solid {
             get {
                 object obj = ResourceManager.GetObject("paintbrush-solid", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap user_regular {
+            get {
+                object obj = ResourceManager.GetObject("user-regular", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

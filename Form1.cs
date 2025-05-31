@@ -1,14 +1,11 @@
 ﻿using App.Properties;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace App
@@ -17,20 +14,65 @@ namespace App
     {
         private string connectionString = "Data Source=SOLOMIIA;Initial Catalog=Projeto;Integrated Security=True";
         private List<int> favoritosAnonimos = new List<int>();
-
-        // 0 = anónimo
-        private int idUtilizadorAtual = 0;
-        public Form1()
+        private int idUtilizadorAtual;
+        public Form1(int userId = 0)
         {
             InitializeComponent();
+            idUtilizadorAtual = userId;
             BtnClick(null, EventArgs.Empty);
-
             painel13.AutoScroll = false;
-
             LoadCategoriesFromDatabase();
             button2.Click += button2_Click;
+            UpdateUIAfterLogin();
+            CriarControlesPersonalizacao();
+        }
+        private void CriarControlesPersonalizacao()
+        {
+            button1.Click += (s, e) => AbrirFormularioPersonalizacao();
         }
 
+        private void AbrirFormularioPersonalizacao()
+        {
+            if (idUtilizadorAtual == 0)
+                {
+                var result = MessageBox.Show("Você precisa estar logado para personalizar um trabalho. Deseja fazer login agora?",
+                    "Login Necessário",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    Register registro = new Register();
+                    if (registro.ShowDialog() == DialogResult.OK)
+                    {
+                        idUtilizadorAtual = SessaoUtilizador.Id;
+                        UpdateUIAfterLogin();
+                        using (var form = new Personalizacao(idUtilizadorAtual))
+                        {
+                            form.ShowDialog();
+                        }
+                    }
+                }
+                }
+            else
+                {
+                using (var form = new Personalizacao(idUtilizadorAtual))
+                {
+                    form.ShowDialog();
+                }
+            }
+        }
+
+        private void UpdateUIAfterLogin()
+        {
+            if (idUtilizadorAtual > 0)
+            {
+                userBtn.ButtonImage = Properties.Resources.user_solid; // Ícone de usuário logado
+            }
+            else
+            {
+                userBtn.ButtonImage = Properties.Resources.user_regular; // Ícone de usuário não logado
+            }
+        }
         private void LoadCategoriesFromDatabase()
         {
             try
@@ -80,7 +122,6 @@ namespace App
                     Console.WriteLine("DB connection failed: " + ex.Message);
                 }
             }
-
             return categories;
         }
 
@@ -133,21 +174,19 @@ namespace App
             {
                 AutoScroll = true,
                 FlowDirection = FlowDirection.TopDown,
-                WrapContents = false, 
+                WrapContents = false,
                 Dock = DockStyle.Fill,
                 Padding = new Padding(10),
                 Margin = new Padding(0),
-                AutoSize = false 
+                AutoSize = false
             };
 
 
             List<ArtistaInfo> artistas = GetArtistas();
-
             foreach (var artista in artistas)
             {
                 CreateArtistaPanel(artista, flowArtists);
             }
-
             painel13.Controls.Add(flowArtists);
         }
 
@@ -200,7 +239,7 @@ namespace App
                 Width = 680,
                 Height = 160,
                 BackColor = Color.White,
-                Margin = new Padding(0, 25, 0, 10), 
+                Margin = new Padding(0, 25, 0, 10),
                 Tag = artista.Id,
                 Cursor = Cursors.Hand
             };
@@ -273,8 +312,6 @@ namespace App
                 Location = new Point(10, 125),
                 BackColor = Color.Transparent
             };
-
-            //"Ver Potfólio"
             Button verPortfolioBtn = new Button
             {
                 Text = "Ver Portfólio",
@@ -282,10 +319,42 @@ namespace App
                 ForeColor = Color.White,
                 BackColor = Color.SteelBlue,
                 FlatStyle = FlatStyle.Flat,
-                Size = new Size(110, 30), 
-                Location = new Point(artistaPanel.Width - 130, 95), 
+                Size = new Size(110, 30),
+                Location = new Point(artistaPanel.Width - 130, 57),
                 Cursor = Cursors.Hand,
                 Tag = artista.Id
+            };
+            Button comBtn = new Button
+            {
+                Text = "Avaliar",
+                Font = new Font("Tahoma", 8, FontStyle.Bold),
+                ForeColor = Color.White,
+                BackColor = Color.SteelBlue,
+                FlatStyle = FlatStyle.Flat,
+                Size = new Size(110, 30),
+                Location = new Point(artistaPanel.Width - 130, 95),
+                Cursor = Cursors.Hand,
+                Tag = artista.Id
+            };
+            comBtn.FlatAppearance.BorderSize = 0;
+            comBtn.FlatAppearance.MouseOverBackColor = Color.FromArgb(100, 149, 237);
+            comBtn.Click += (s, e) =>
+            {
+                if (idUtilizadorAtual == 0)
+                {
+                    MessageBox.Show("Você precisa estar logado para avaliar um artista.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                int artistaId = (int)comBtn.Tag;
+
+                using (var formAvaliacao = new AvaliacaoForm(idUtilizadorAtual, artistaId))
+                {
+                    if (formAvaliacao.ShowDialog() == DialogResult.OK)
+                    {
+                        MessageBox.Show("Obrigado pela sua avaliação!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
             };
             verPortfolioBtn.FlatAppearance.BorderSize = 0;
             verPortfolioBtn.FlatAppearance.MouseOverBackColor = Color.FromArgb(100, 149, 237);
@@ -293,7 +362,7 @@ namespace App
             {
                 int artistaId = (int)((Button)s).Tag;
             };
-            artistaPanel.Click += ArtistaPanel_Click;
+            verPortfolioBtn.Click += ArtistaPanel_Click;
             artistaPanel.MouseEnter += (s, e) => { artistaPanel.BackColor = Color.FromArgb(245, 250, 255); };
             artistaPanel.MouseLeave += (s, e) => { artistaPanel.BackColor = Color.White; };
 
@@ -303,11 +372,12 @@ namespace App
             artistaPanel.Controls.Add(contatoLabel);
             parentPanel.Controls.Add(artistaPanel);
             artistaPanel.Controls.Add(verPortfolioBtn);
+            artistaPanel.Controls.Add(comBtn);
         }
 
         private void ArtistaPanel_Click(object sender, EventArgs e)
         {
-            Panel clickedPanel = (Panel)sender;
+            Button clickedPanel = (Button)sender;
             int artistaId = (int)clickedPanel.Tag;
             ArtistaInfo artista = GetArtistaById(artistaId);
             string message = $"Artista: {artista.Nome}\n" +
@@ -480,7 +550,6 @@ namespace App
             categoryPanel.Click += CategoryPanel_Click;
             categoryPanel.MouseEnter += (s, e) => { categoryPanel.BackColor = Color.FromArgb(245, 245, 245); };
             categoryPanel.MouseLeave += (s, e) => { categoryPanel.BackColor = Color.White; };
-
             categoryPanel.Controls.Add(nameLabel);
             categoryPanel.Controls.Add(countLabel);
             parentPanel.Controls.Add(categoryPanel);
@@ -491,7 +560,7 @@ namespace App
             Panel trabalhoPanel = new Panel
             {
                 Width = 200,
-                Height = 150,
+                Height = 180,
                 BackColor = Color.Red,
                 Margin = new Padding(15),
                 Tag = trabalho.Id,
@@ -526,7 +595,7 @@ namespace App
                 TextAlign = ContentAlignment.MiddleLeft,
                 Width = trabalhoPanel.Width - 20,
                 Height = 30,
-                Location = new Point(10, 15),
+                Location = new Point(10, 10), 
                 BackColor = Color.Transparent
             };
 
@@ -537,10 +606,11 @@ namespace App
                 ForeColor = Color.Gray,
                 TextAlign = ContentAlignment.TopLeft,
                 Width = trabalhoPanel.Width - 20,
-                Height = 60,
-                Location = new Point(10, 45),
+                Height = 20, 
+                Location = new Point(10, 40), 
                 BackColor = Color.Transparent
             };
+
             Label disponLabel = new Label
             {
                 Text = trabalho.Disponibilidade,
@@ -548,31 +618,104 @@ namespace App
                 ForeColor = (trabalho.Disponibilidade == "à venda") ? Color.Green : Color.Red,
                 Width = trabalhoPanel.Width - 20,
                 Height = 20,
-                Location = new Point(10, 105), 
+                Location = new Point(10, 80), // Ajuste da posição Y
                 BackColor = Color.Transparent
             };
 
             Label precoLabel = new Label
             {
-                Text = trabalho.Preco.ToString("C"), // €
+                Text = trabalho.Preco.ToString("C"),
                 Font = new Font("Tahoma", 9, FontStyle.Italic),
                 ForeColor = Color.Green,
-                TextAlign = ContentAlignment.MiddleRight,
+                TextAlign = ContentAlignment.MiddleLeft,
                 Width = trabalhoPanel.Width - 20,
                 Height = 20,
-                Location = new Point(10, 130),
+                Location = new Point(10, 110),
                 BackColor = Color.Transparent
             };
 
+            // Botão Comprar
+            Button comprarBtn = new Button
+            {
+                Text = "Comprar",
+                Font = new Font("Tahoma", 8, FontStyle.Bold),
+                ForeColor = Color.White,
+                BackColor = Color.SteelBlue,
+                FlatStyle = FlatStyle.Flat,
+                Size = new Size(85, 25),
+                Location = new Point(10, 140),
+                Tag = trabalho.Id,
+                Margin = new Padding(0, 0, 10, 0),
+                Cursor = Cursors.Hand
+            };
+            comprarBtn.FlatAppearance.BorderSize = 0;
+            comprarBtn.Click += (s, e) => {
+                MessageBox.Show($"Comprar trabalho ID: {trabalho.Id}");
+                // Implemente a lógica de compra aqui
+            };
+
+            // Botão Personalizar
+            Button personalizarBtn = new Button
+            {
+                Text = "Personalizar",
+                Font = new Font("Tahoma", 8, FontStyle.Bold),
+                ForeColor = Color.White,
+                BackColor = Color.SteelBlue,
+                FlatStyle = FlatStyle.Flat,
+                Size = new Size(85, 25),
+                Location = new Point(100, 140), 
+                Tag = trabalho.Id,
+                Cursor = Cursors.Hand
+            };
+            personalizarBtn.FlatAppearance.BorderSize = 0;
+            personalizarBtn.Click += (s, e) =>
+            {
+                if (trabalho.Disponibilidade != "à venda" && trabalho.Disponibilidade != "exposição")
+                {
+                    MessageBox.Show("Este trabalho não está disponível para personalização.",
+                                   "Indisponível", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                if (idUtilizadorAtual == 0)
+                {
+                    var result = MessageBox.Show("Você precisa estar logado para personalizar trabalhos. Deseja fazer login agora?",
+                                                 "Login Necessário",
+                                                 MessageBoxButtons.YesNo,
+                                                 MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        Register registro = new Register();
+                        if (registro.ShowDialog() == DialogResult.OK)
+                        {
+                            idUtilizadorAtual = SessaoUtilizador.Id;
+                            UpdateUIAfterLogin();
+                        }
+                        else
+                        {
+                            return; 
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                using (var form = new Personalizacao2(trabalho.Id))
+                {
+                    form.ShowDialog();
+                }
+            };
+            trabalhoPanel.Controls.Add(titleLabel);
+            trabalhoPanel.Controls.Add(descLabel);
+            trabalhoPanel.Controls.Add(disponLabel);
+            trabalhoPanel.Controls.Add(precoLabel);
+            trabalhoPanel.Controls.Add(comprarBtn);
+            trabalhoPanel.Controls.Add(personalizarBtn);
             trabalhoPanel.Click += TrabalhoPanel_Click;
             trabalhoPanel.MouseEnter += (s, e) => { trabalhoPanel.BackColor = Color.FromArgb(240, 245, 255); };
             trabalhoPanel.MouseLeave += (s, e) => { trabalhoPanel.BackColor = Color.White; };
 
-            trabalhoPanel.Controls.Add(titleLabel);
-            trabalhoPanel.Controls.Add(descLabel);
             parentPanel.Controls.Add(trabalhoPanel);
-            trabalhoPanel.Controls.Add(precoLabel);
-            trabalhoPanel.Controls.Add(disponLabel);
         }
 
         private GraphicsPath CreateRoundedRectangle(Rectangle rect, int radius)
@@ -763,13 +906,40 @@ namespace App
                 Tag = curso.Id,
                 Cursor = Cursors.Hand
             };
+            inscrBtn.Click += (s, e) =>
+            {
+                if (idUtilizadorAtual == 0)
+                {
+                    var result = MessageBox.Show("Você precisa estar logado para adicionar cursos aos favoritos. Deseja fazer login agora?",
+                                       "Login Necessário",
+                                       MessageBoxButtons.YesNo,
+                                       MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        Register registro = new Register();
+                        if (registro.ShowDialog() == DialogResult.OK)
+                        {
+                            // Atualiza o ID do usuário após login bem-sucedido
+                            idUtilizadorAtual = SessaoUtilizador.Id;
+                            UpdateUIAfterLogin();
+                        }
+                        using (var form = new Form2(curso.Id, idUtilizadorAtual))
+                        {
+                            form.ShowDialog();
+                        }
+                    }
+                }
+            };
 
             Component.Button favBtn = new Component.Button
             {
                 ButtonText = "",
-                ButtonImage = Properties.Resources.heart_solid__2_,
+                ButtonImage = Properties.Resources.heart_regular__1_,
                 Size = new Size(40, 40),
                 Location = new Point(cursoPanel.Width - 130, 30),
+                BackgroundColor = Color.Transparent,
+                GradientBottomColor = Color.Transparent,
+                GradientTopColor = Color.Transparent,
                 BorderRadius = 20,
                 Tag = curso.Id,
                 Cursor = Cursors.Hand
@@ -781,13 +951,11 @@ namespace App
 
             if (isFavorito)
             {
-                favBtn.GradientTopColor = Color.Crimson;
-                favBtn.GradientBottomColor = Color.Red;
+                favBtn.ButtonImage = Properties.Resources.heart_solid__2_;
             }
             else
             {
-                favBtn.GradientTopColor = Color.LightGray;
-                favBtn.GradientBottomColor = Color.Gray;
+                favBtn.ButtonImage = Properties.Resources.heart_regular__1_;
             }
 
             // Eventos
@@ -801,7 +969,27 @@ namespace App
             favBtn.Click += (s, e) =>
             {
                 int cursoId = (int)((Component.Button)s).Tag;
-                ToggleFavorito(cursoId);
+                if (idUtilizadorAtual == 0)
+                {
+                    var result = MessageBox.Show("Você precisa estar logado para adicionar cursos aos favoritos. Deseja fazer login agora?",
+                                       "Login Necessário",
+                                       MessageBoxButtons.YesNo,
+                                       MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        Register registro = new Register();
+                        if (registro.ShowDialog() == DialogResult.OK)
+                        {
+                            // Atualiza o ID do usuário após login bem-sucedido
+                            idUtilizadorAtual = SessaoUtilizador.Id;
+                            UpdateUIAfterLogin();
+                        }
+                    }
+                }
+                else
+                {
+                    ToggleFavorito(cursoId);
+                }
             };
             cursoPanel.MouseEnter += (s, e) => { cursoPanel.BackColor = Color.FromArgb(245, 250, 255); };
             cursoPanel.MouseLeave += (s, e) => { cursoPanel.BackColor = Color.White; };
@@ -982,7 +1170,6 @@ namespace App
             {
                 return GetCursosByIds(favoritosAnonimos);
             }
-
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 try
@@ -998,16 +1185,18 @@ namespace App
                         {
                             favoritos.Add(new CursoInfo
                             {
-                                Id = reader.IsDBNull(0) ? 0 : reader.GetInt32(0),
-                                NomeCurso = reader.IsDBNull(1) ? "" : reader.GetString(1),
-                                Preco = reader.IsDBNull(2) ? 0 : reader.GetDecimal(2),
-                                Descricao = reader.IsDBNull(3) ? "Sem descrição" : reader.GetString(3),
-                                DataInicio = reader.IsDBNull(4) ? DateTime.MinValue : reader.GetDateTime(4),
-                                DataFim = reader.IsDBNull(5) ? DateTime.MinValue : reader.GetDateTime(5),
-                                Formato = reader.IsDBNull(6) ? "Formato não informado" : reader.GetString(6),
-                                Capacidade = reader.IsDBNull(7) ? 0 : reader.GetInt32(7),
-                                NomeArtista = reader.IsDBNull(8) ? "Desconhecido" : reader.GetString(8),
-                                NiveisTurmas = reader.IsDBNull(9) ? "Não definidos" : reader.GetString(9)
+                                Id = Convert.ToInt32(reader["CursoId"]),
+                                NomeCurso = reader["NomeCurso"].ToString(),
+                                Descricao = reader["descricao"].ToString(),
+                                Preco = Convert.ToDecimal(reader["preco"]),
+                                DataInicio = Convert.ToDateTime(reader["data_inicio"]),
+                                DataFim = Convert.ToDateTime(reader["data_fim"]),
+                                Formato = reader["formato"].ToString(),
+                                Capacidade = Convert.ToInt32(reader["capacidade"]),
+                                NomeArtista = reader["NomeArtista"].ToString(),
+                                DataFavorito = Convert.ToDateTime(reader["data_favorito"]),
+                                TotalFavoritos = Convert.ToInt32(reader["TotalFavoritos"])
+
                             });
                         }
                     }
@@ -1024,9 +1213,7 @@ namespace App
         private List<CursoInfo> GetCursosByIds(List<int> cursoIds)
         {
             List<CursoInfo> cursos = new List<CursoInfo>();
-
             if (cursoIds.Count == 0) return cursos;
-
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 try
@@ -1050,7 +1237,6 @@ namespace App
                 WHERE c.id IN ({ids})";
 
                     SqlCommand command = new SqlCommand(query, connection);
-
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -1105,6 +1291,7 @@ namespace App
                 Padding = new Padding(10),
                 Margin = new Padding(0),
                 AutoSize = false
+
             };
 
             List<CursoInfo> favoritos = GetFavoritosByUser();
@@ -1116,9 +1303,8 @@ namespace App
                     Text = "Você ainda não tem cursos favoritos.\nNavigue pelos cursos e clique no ❤️ para adicionar aos favoritos!",
                     Font = new Font("Tahoma", 12),
                     ForeColor = Color.Gray,
-                    TextAlign = ContentAlignment.MiddleCenter,
-                    Dock = DockStyle.Fill,
-                    AutoSize = false
+                    AutoSize = true,
+                    Margin = new Padding(0, 30, 0, 0)
                 };
                 flowFavoritos.Controls.Add(noFavoritosLabel);
             }
@@ -1129,7 +1315,6 @@ namespace App
                     CreateCursoPanel(curso, flowFavoritos);
                 }
             }
-
             painel13.Controls.Add(flowFavoritos);
         }
         private void RefreshCurrentView()
@@ -1217,6 +1402,49 @@ namespace App
         private void button3_Paint(object sender, PaintEventArgs e) { }
         private void Form1_Load(object sender, EventArgs e) { }
         private void hScrollBar1_Scroll(object sender, ScrollEventArgs e) { }
+
+        private void userBtn_Paint(object sender, PaintEventArgs e)
+        {
+        }
+        private void userBtn_Click(object sender, EventArgs e)
+        {
+            if (idUtilizadorAtual == 0)
+            {
+                Register registro = new Register();
+                var result = registro.ShowDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    // Atualiza o ID do usuário após login bem-sucedido
+                    idUtilizadorAtual = SessaoUtilizador.Id;
+                    UpdateUIAfterLogin();
+                    RefreshCurrentView();
+
+                    // Mostra mensagem de boas-vindas
+                    MessageBox.Show($"Bem-vindo de volta, {SessaoUtilizador.Nome}!", "Login",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            else
+            {
+                var result = MessageBox.Show("Deseja sair da sua conta?", "Logout",
+                                           MessageBoxButtons.YesNo,
+                                           MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    // Limpa a sessão e volta ao modo anônimo
+                    SessaoUtilizador.LimparSessao();
+                    idUtilizadorAtual = 0;
+                    UpdateUIAfterLogin();
+                    RefreshCurrentView();
+
+                    MessageBox.Show("Você saiu da sua conta.", "Logout",
+                                   MessageBoxButtons.OK,
+                                   MessageBoxIcon.Information);
+                }
+            }
+        }
     }
 
     public class CategoryInfo
@@ -1258,6 +1486,9 @@ namespace App
         public int Capacidade { get; set; }
         public string NomeArtista { get; set; }
         public string NiveisTurmas { get; set; }
+        public DateTime DataFavorito { get; set; }
+        public int TotalFavoritos { get; set; }
+
     }
 
 }
