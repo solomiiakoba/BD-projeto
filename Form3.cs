@@ -1,4 +1,6 @@
 ﻿using App.Properties;
+using Component;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,12 +12,12 @@ using System.Windows.Forms;
 
 namespace App
 {
-    public partial class Form1 : Form
+    public partial class Form3 : Form
     {
         private string connectionString = "Data Source=tcp:mednat.ieeta.pt\\SQLSERVER,8101;Initial Catalog=p11g6;User Id=p11g6;Password=-1680827155@BD";
         private List<int> favoritosAnonimos = new List<int>();
         private int idUtilizadorAtual;
-        public Form1(int userId = 0)
+        public Form3(int userId = 0)
         {
             InitializeComponent();
             idUtilizadorAtual = userId;
@@ -34,7 +36,7 @@ namespace App
         private void AbrirFormularioPersonalizacao()
         {
             if (idUtilizadorAtual == 0)
-                {
+            {
                 var result = MessageBox.Show("Você precisa estar logado para personalizar um trabalho. Deseja fazer login agora?",
                     "Login Necessário",
                     MessageBoxButtons.YesNo,
@@ -52,9 +54,9 @@ namespace App
                         }
                     }
                 }
-                }
+            }
             else
-                {
+            {
                 using (var form = new Personalizacao(idUtilizadorAtual))
                 {
                     form.ShowDialog();
@@ -66,11 +68,11 @@ namespace App
         {
             if (idUtilizadorAtual > 0)
             {
-                userBtn.ButtonImage = Properties.Resources.user_solid; // Ícone de usuário logado
+                userBtn.ButtonImage = Properties.Resources.user_solid;
             }
             else
             {
-                userBtn.ButtonImage = Properties.Resources.user_regular; // Ícone de usuário não logado
+                userBtn.ButtonImage = Properties.Resources.user_regular;
             }
         }
         private void LoadCategoriesFromDatabase()
@@ -124,6 +126,117 @@ namespace App
             }
             return categories;
         }
+
+        private List<PortfolioInfo> GetPortfoliosDoArtista(int idArtista)
+        {
+            List<PortfolioInfo> lista = new List<PortfolioInfo>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT id, nome FROM Portfolio WHERE artista = @id";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", idArtista);
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        lista.Add(new PortfolioInfo
+                        {
+                            Id = reader.GetInt32(0),
+                            Nome = reader.GetString(1)
+                        });
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+
+        private List<CursoInfo> GetCursosDoArtista(int idArtista)
+        {
+            List<CursoInfo> lista = new List<CursoInfo>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = @"
+            SELECT c.id, c.nome, c.preco, c.descricao, c.data_inicio, c.data_fim,
+                   c.formato, c.capacidade, u.nome as nome_artista
+            FROM Curso c
+            INNER JOIN Artista a ON c.id_artista = a.id
+            INNER JOIN Utilizador u ON a.id = u.id
+            WHERE a.id = @idArtista";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@idArtista", idArtista);
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        lista.Add(new CursoInfo
+                        {
+                            Id = reader.GetInt32(0),
+                            NomeCurso = reader.GetString(1),
+                            Preco = reader.GetDecimal(2),
+                            Descricao = reader.IsDBNull(3) ? "Sem descrição" : reader.GetString(3),
+                            DataInicio = reader.GetDateTime(4),
+                            DataFim = reader.GetDateTime(5),
+                            Formato = reader.IsDBNull(6) ? "N/A" : reader.GetString(6),
+                            Capacidade = reader.GetInt32(7),
+                            NomeArtista = reader.GetString(8)
+                        });
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+
+
+        private void ShowProjetos()
+        {
+            painel13.Controls.Clear();
+            Label label = new Label
+            {
+                Text = "Conteúdo dos Projetos",
+                Font = new Font("Tahoma", 14),
+                Dock = DockStyle.Top,
+                ForeColor = Color.Black
+            };
+            painel13.Controls.Add(label);
+        }
+
+        private void ShowEstatisticas()
+        {
+            painel13.Controls.Clear();
+            Label label = new Label
+            {
+                Text = "Estatísticas do sistema",
+                Font = new Font("Tahoma", 14),
+                Dock = DockStyle.Top,
+                ForeColor = Color.Black
+            };
+            painel13.Controls.Add(label);
+        }
+
+        private void ShowDefinicoes()
+        {
+            painel13.Controls.Clear();
+            Label label = new Label
+            {
+                Text = "Definições do utilizador",
+                Font = new Font("Tahoma", 14),
+                Dock = DockStyle.Top,
+                ForeColor = Color.Black
+            };
+            painel13.Controls.Add(label);
+        }
+
 
         private void ShowCategories()
         {
@@ -312,7 +425,7 @@ namespace App
                 Location = new Point(10, 125),
                 BackColor = Color.Transparent
             };
-            Button verPortfolioBtn = new Button
+            System.Windows.Forms.Button verPortfolioBtn = new System.Windows.Forms.Button
             {
                 Text = "Ver Portfólio",
                 Font = new Font("Tahoma", 8, FontStyle.Bold),
@@ -324,7 +437,7 @@ namespace App
                 Cursor = Cursors.Hand,
                 Tag = artista.Id
             };
-            Button comBtn = new Button
+            System.Windows.Forms.Button comBtn = new System.Windows.Forms.Button
             {
                 Text = "Avaliar",
                 Font = new Font("Tahoma", 8, FontStyle.Bold),
@@ -360,7 +473,7 @@ namespace App
             verPortfolioBtn.FlatAppearance.MouseOverBackColor = Color.FromArgb(100, 149, 237);
             verPortfolioBtn.Click += (s, e) =>
             {
-                int artistaId = (int)((Button)s).Tag;
+                int artistaId = (int)((System.Windows.Forms.Button)s).Tag;
             };
             verPortfolioBtn.Click += ArtistaPanel_Click;
             artistaPanel.MouseEnter += (s, e) => { artistaPanel.BackColor = Color.FromArgb(245, 250, 255); };
@@ -377,7 +490,7 @@ namespace App
 
         private void ArtistaPanel_Click(object sender, EventArgs e)
         {
-            Button clickedPanel = (Button)sender;
+            System.Windows.Forms.Button clickedPanel = (System.Windows.Forms.Button)sender;
             int artistaId = (int)clickedPanel.Tag;
             ArtistaInfo artista = GetArtistaById(artistaId);
             string message = $"Artista: {artista.Nome}\n" +
@@ -595,7 +708,7 @@ namespace App
                 TextAlign = ContentAlignment.MiddleLeft,
                 Width = trabalhoPanel.Width - 20,
                 Height = 30,
-                Location = new Point(10, 10), 
+                Location = new Point(10, 10),
                 BackColor = Color.Transparent
             };
 
@@ -606,8 +719,8 @@ namespace App
                 ForeColor = Color.Gray,
                 TextAlign = ContentAlignment.TopLeft,
                 Width = trabalhoPanel.Width - 20,
-                Height = 20, 
-                Location = new Point(10, 40), 
+                Height = 20,
+                Location = new Point(10, 40),
                 BackColor = Color.Transparent
             };
 
@@ -634,7 +747,7 @@ namespace App
                 BackColor = Color.Transparent
             };
 
-            Button comprarBtn = new Button
+            System.Windows.Forms.Button comprarBtn = new System.Windows.Forms.Button
             {
                 Text = "Comprar",
                 Font = new Font("Tahoma", 8, FontStyle.Bold),
@@ -652,7 +765,7 @@ namespace App
                 MessageBox.Show($"Comprar trabalho ID: {trabalho.Id}");
             };
 
-            Button personalizarBtn = new Button
+            System.Windows.Forms.Button personalizarBtn = new System.Windows.Forms.Button
             {
                 Text = "Personalizar",
                 Font = new Font("Tahoma", 8, FontStyle.Bold),
@@ -660,7 +773,7 @@ namespace App
                 BackColor = Color.SteelBlue,
                 FlatStyle = FlatStyle.Flat,
                 Size = new Size(85, 25),
-                Location = new Point(100, 140), 
+                Location = new Point(100, 140),
                 Tag = trabalho.Id,
                 Cursor = Cursors.Hand
             };
@@ -689,7 +802,7 @@ namespace App
                         }
                         else
                         {
-                            return; 
+                            return;
                         }
                     }
                     else
@@ -1155,54 +1268,6 @@ namespace App
             }
         }
 
-        private List<CursoInfo> GetFavoritosByUser()
-        {
-            List<CursoInfo> favoritos = new List<CursoInfo>();
-
-            if (idUtilizadorAtual == 0)
-            {
-                return GetCursosByIds(favoritosAnonimos);
-            }
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    connection.Open();
-                    SqlCommand command = new SqlCommand("sp_GetFavoritosByUser", connection);
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@IdUtilizador", idUtilizadorAtual);
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            favoritos.Add(new CursoInfo
-                            {
-                                Id = Convert.ToInt32(reader["CursoId"]),
-                                NomeCurso = reader["NomeCurso"].ToString(),
-                                Descricao = reader["descricao"].ToString(),
-                                Preco = Convert.ToDecimal(reader["preco"]),
-                                DataInicio = Convert.ToDateTime(reader["data_inicio"]),
-                                DataFim = Convert.ToDateTime(reader["data_fim"]),
-                                Formato = reader["formato"].ToString(),
-                                Capacidade = Convert.ToInt32(reader["capacidade"]),
-                                NomeArtista = reader["NomeArtista"].ToString(),
-                                DataFavorito = Convert.ToDateTime(reader["data_favorito"]),
-                                TotalFavoritos = Convert.ToInt32(reader["TotalFavoritos"])
-
-                            });
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erro ao carregar favoritos: " + ex.Message);
-                }
-            }
-
-            return favoritos;
-        }
-
         private List<CursoInfo> GetCursosByIds(List<int> cursoIds)
         {
             List<CursoInfo> cursos = new List<CursoInfo>();
@@ -1258,58 +1323,279 @@ namespace App
 
             return cursos;
         }
-        private void ShowFavoritos()
+
+        private void AdicionarMaisBotoes()
+        {
+            // Primeiro botão - Projetos
+            System.Windows.Forms.Button btnProjetos = new System.Windows.Forms.Button
+            {
+                Text = "Projetos",
+                Name = "ProjetosBtn",
+                Width = 150,
+                Height = 40,
+                BackColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Tahoma", 10),
+                Margin = new Padding(10)
+            };
+            btnProjetos.Click += (s, e) => ShowProjetos(); 
+            painel13.Controls.Add(btnProjetos);
+
+            System.Windows.Forms.Button btnEstatisticas = new System.Windows.Forms.Button
+            {
+                Text = "Estatísticas",
+                Name = "EstatisticasBtn",
+                Width = 150,
+                Height = 40,
+                BackColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Tahoma", 10),
+                Margin = new Padding(10)
+            };
+            btnEstatisticas.Click += (s, e) => ShowEstatisticas();
+            painel13.Controls.Add(btnEstatisticas);
+
+            // Terceiro botão - Definições
+            System.Windows.Forms.Button btnDefinicoes = new System.Windows.Forms.Button
+            {
+                Text = "Definições",
+                Name = "DefinicoesBtn",
+                Width = 150,
+                Height = 40,
+                BackColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Tahoma", 10),
+                Margin = new Padding(10)
+            };
+            btnDefinicoes.Click += (s, e) => ShowDefinicoes();
+            painel13.Controls.Add(btnDefinicoes);
+        }
+
+        private void ShowPainelGestaoArtista()
         {
             painel13.Controls.Clear();
-            painel13.Padding = new Padding(20);
             painel13.Dock = DockStyle.Fill;
+            painel13.Padding = new Padding(20);
 
-            Label favoritosTitle = new Label
+            Label titulo = new Label
             {
-                Text = "Meus Favoritos",
+                Text = "Gestão do Artista",
                 Font = new Font("Tahoma", 16, FontStyle.Bold),
+                ForeColor = Color.SteelBlue,
                 Dock = DockStyle.Top,
-                TextAlign = ContentAlignment.MiddleLeft,
-                Height = 30,
-                ForeColor = Color.SteelBlue
+                Height = 40,
+                TextAlign = ContentAlignment.MiddleLeft
             };
-            painel13.Controls.Add(favoritosTitle);
+            painel13.Controls.Add(titulo);
 
-            FlowLayoutPanel flowFavoritos = new FlowLayoutPanel
+            FlowLayoutPanel flow = new FlowLayoutPanel
             {
-                AutoScroll = true,
-                FlowDirection = FlowDirection.TopDown,
-                WrapContents = false,
-                Dock = DockStyle.Fill,
+                Dock = DockStyle.Top,
+                FlowDirection = FlowDirection.LeftToRight,
+                AutoSize = true,
                 Padding = new Padding(10),
-                Margin = new Padding(0),
-                AutoSize = false
-
+                Margin = new Padding(10),
             };
 
-            List<CursoInfo> favoritos = GetFavoritosByUser();
+            System.Windows.Forms.Button btnPortfolio = new System.Windows.Forms.Button
+            {
+                Text = "Gerir Portfólios",
+                Size = new Size(150, 40),
+                Font = new Font("Tahoma", 10, FontStyle.Bold),
+                BackColor = Color.SteelBlue,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
 
-            if (favoritos.Count == 0)
+            System.Windows.Forms.Button btnCursos = new System.Windows.Forms.Button
             {
-                Label noFavoritosLabel = new Label
-                {
-                    Text = "Você ainda não tem cursos favoritos.\nNavigue pelos cursos e clique no ❤️ para adicionar aos favoritos!",
-                    Font = new Font("Tahoma", 12),
-                    ForeColor = Color.Gray,
-                    AutoSize = true,
-                    Margin = new Padding(0, 30, 0, 0)
-                };
-                flowFavoritos.Controls.Add(noFavoritosLabel);
-            }
-            else
+                Text = "Gerir Cursos",
+                Size = new Size(150, 40),
+                Font = new Font("Tahoma", 10, FontStyle.Bold),
+                BackColor = Color.Teal,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+
+            System.Windows.Forms.Button btnTurmas = new System.Windows.Forms.Button
             {
-                foreach (var curso in favoritos)
-                {
-                    CreateCursoPanel(curso, flowFavoritos);
-                }
-            }
-            painel13.Controls.Add(flowFavoritos);
+                Text = "Gerir Turmas",
+                Size = new Size(150, 40),
+                Font = new Font("Tahoma", 10, FontStyle.Bold),
+                BackColor = Color.Indigo,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat
+            };
+
+            // Eventos dos botões
+            btnPortfolio.Click += (s, e) => ShowPortfoliosDoArtista();
+            btnCursos.Click += (s, e) => ShowCursosDoArtista();
+            btnTurmas.Click += (s, e) => MessageBox.Show("Gerir Turmas (por implementar)");
+
+            // Adicionar ao painel
+            flow.Controls.Add(btnPortfolio);
+            flow.Controls.Add(btnCursos);
+            flow.Controls.Add(btnTurmas);
+            painel13.Controls.Add(flow);
         }
+
+        private void ShowPortfoliosDoArtista()
+        {
+            if (idUtilizadorAtual == 0)
+            {
+                MessageBox.Show("É necessário iniciar sessão para ver os seus portfólios.");
+                return;
+            }
+
+            painel13.Controls.Clear();
+            painel13.Dock = DockStyle.Fill;
+            painel13.Padding = new Padding(20);
+
+            Label titulo = new Label
+            {
+                Text = "Seus Portfólios",
+                Font = new Font("Tahoma", 14, FontStyle.Bold),
+                ForeColor = Color.SteelBlue,
+                Dock = DockStyle.Top,
+                Height = 40,
+                TextAlign = ContentAlignment.MiddleLeft
+            };
+            painel13.Controls.Add(titulo);
+
+            FlowLayoutPanel lista = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.TopDown,
+                AutoScroll = true,
+                WrapContents = false,
+                Padding = new Padding(10)
+            };
+
+            List<PortfolioInfo> portfolios = GetPortfoliosDoArtista(idUtilizadorAtual);
+
+            foreach (var portfolio in portfolios)
+            {
+                Panel portfolioPanel = new Panel
+                {
+                    Width = 700,
+                    Height = 60,
+                    BackColor = Color.White,
+                    Margin = new Padding(0, 0, 0, 10),
+                    Padding = new Padding(10),
+                    BorderStyle = BorderStyle.FixedSingle
+                };
+
+                Label nomeLabel = new Label
+                {
+                    Text = $"#{portfolio.Id} - {portfolio.Nome}",
+                    Font = new Font("Tahoma", 11, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(25, 25, 112),
+                    Dock = DockStyle.Fill,
+                    TextAlign = ContentAlignment.MiddleLeft
+                };
+
+                portfolioPanel.Controls.Add(nomeLabel);
+                lista.Controls.Add(portfolioPanel);
+            }
+
+
+            painel13.Controls.Add(lista);
+        }
+
+        private void ShowCursosDoArtista()
+        {
+            if (idUtilizadorAtual == 0)
+            {
+                MessageBox.Show("É necessário estar logado como artista para ver seus cursos.");
+                return;
+            }
+
+            painel13.Controls.Clear();
+            painel13.Dock = DockStyle.Fill;
+            painel13.Padding = new Padding(20);
+
+            Label titulo = new Label
+            {
+                Text = "Seus Cursos",
+                Font = new Font("Tahoma", 14, FontStyle.Bold),
+                ForeColor = Color.SteelBlue,
+                Dock = DockStyle.Top,
+                Height = 40,
+                TextAlign = ContentAlignment.MiddleLeft
+            };
+            painel13.Controls.Add(titulo);
+
+            FlowLayoutPanel lista = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.TopDown,
+                AutoScroll = true,
+                WrapContents = false,
+                Padding = new Padding(10)
+            };
+
+            List<CursoInfo> cursos = GetCursosDoArtista(idUtilizadorAtual);
+
+            foreach (var curso in cursos)
+            {
+                Panel cursoPanel = new Panel
+                {
+                    Width = 700,
+                    Height = 120,
+                    BackColor = Color.White,
+                    Margin = new Padding(0, 0, 0, 10),
+                    Padding = new Padding(10),
+                    BorderStyle = BorderStyle.FixedSingle
+                };
+
+                Label nomeLabel = new Label
+                {
+                    Text = $"#{curso.Id} - {curso.NomeCurso} | {curso.Preco}€ | {curso.Formato}",
+                    Font = new Font("Tahoma", 10, FontStyle.Bold),
+                    ForeColor = Color.Black,
+                    Dock = DockStyle.Top,
+                    Height = 25
+                };
+
+                Label dataLabel = new Label
+                {
+                    Text = $"{curso.DataInicio:dd/MM/yyyy} até {curso.DataFim:dd/MM/yyyy}",
+                    Font = new Font("Tahoma", 9),
+                    Dock = DockStyle.Top,
+                    Height = 20
+                };
+
+                Label capacidadeLabel = new Label
+                {
+                    Text = $"Capacidade: {curso.Capacidade}",
+                    Font = new Font("Tahoma", 9),
+                    Dock = DockStyle.Top,
+                    Height = 20
+                };
+
+                Label descLabel = new Label
+                {
+                    Text = $"Descrição: {curso.Descricao}",
+                    Font = new Font("Tahoma", 9, FontStyle.Italic),
+                    Dock = DockStyle.Top,
+                    Height = 40
+                };
+
+                cursoPanel.Controls.Add(descLabel);
+                cursoPanel.Controls.Add(capacidadeLabel);
+                cursoPanel.Controls.Add(dataLabel);
+                cursoPanel.Controls.Add(nomeLabel);
+                lista.Controls.Add(cursoPanel);
+            }
+
+
+            painel13.Controls.Add(lista);
+        }
+
+
+
+
+
         private void RefreshCurrentView()
         {
             foreach (var btn in MenuPanel.Controls.OfType<Component.Button>())
@@ -1327,8 +1613,8 @@ namespace App
                         case "CursesBtn":
                             ShowCursos();
                             break;
-                        case "FavouritesBtn":
-                            ShowFavoritos();
+                        case "btnSettings":
+                            ShowPainelGestaoArtista();
                             break;
                     }
                     break;
@@ -1339,6 +1625,11 @@ namespace App
         private void button2_Click(object sender, EventArgs e)
         {
             ShowCategories();
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            ShowPainelGestaoArtista();
         }
 
         private void BtnClick(object sender, EventArgs e)
@@ -1371,10 +1662,10 @@ namespace App
                         btn.ButtonImage = Properties.Resources.graduation_cap_solid;
                         if (buttonName == "CursesBtn") ShowCursos();
                         break;
-                    case "FavouritesBtn":
-                        btn.ButtonImage = Properties.Resources.heart_solid__2_;
-                        if (buttonName == "FavouritesBtn") ShowFavoritos();
+                    case "btnSettings":
+                        if (buttonName == "btnSettings") ShowPainelGestaoArtista();
                         break;
+
                 }
             }
         }
@@ -1439,54 +1730,38 @@ namespace App
             }
         }
 
-        private void painel11_Paint_1(object sender, PaintEventArgs e)
+        private void btnSettings_Paint_1(object sender, PaintEventArgs e){}
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void painel15_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button4_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button5_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button6_Paint(object sender, PaintEventArgs e)
         {
 
         }
     }
 
-    public class CategoryInfo
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int ItemCount { get; set; }
-    }
-
-    public class TrabalhoInfo
-    {
-        public int Id { get; set; }
-        public string Titulo { get; set; }
-        public string Descricao { get; set; }
-        public decimal Preco { get; set; }
-        public string Disponibilidade { get; set; }
-    }
-
-    public class ArtistaInfo
+    public class PortfolioInfo
     {
         public int Id { get; set; }
         public string Nome { get; set; }
-        public string Especialidade { get; set; }
-        public string Bibliografia { get; set; }
-        public string Disponibilidade { get; set; }
-        public string Email { get; set; }
-        public string Telefone { get; set; }
-    }
-
-    public class CursoInfo
-    {
-        public int Id { get; set; }
-        public string NomeCurso { get; set; }
-        public decimal Preco { get; set; }
-        public string Descricao { get; set; }
-        public DateTime DataInicio { get; set; }
-        public DateTime DataFim { get; set; }
-        public string Formato { get; set; }
-        public int Capacidade { get; set; }
-        public string NomeArtista { get; set; }
-        public string NiveisTurmas { get; set; }
-        public DateTime DataFavorito { get; set; }
-        public int TotalFavoritos { get; set; }
-
     }
 
 }

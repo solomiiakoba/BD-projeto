@@ -1,6 +1,6 @@
 ﻿namespace App
 {
-    partial class Form1
+    partial class Form3
     {
         /// <summary>
         /// Variável de designer necessária.
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form3));
             this.panel1 = new System.Windows.Forms.Panel();
             this.painel14 = new Component.Painel1();
             this.userBtn = new Component.Button();
@@ -36,7 +37,6 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.button2 = new Component.Button();
             this.painel13 = new Component.Painel1();
-            this.label6 = new System.Windows.Forms.Label();
             this.painel11 = new Component.Painel1();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -48,9 +48,9 @@
             this.cancelBtn = new Component.Button();
             this.searchLab = new System.Windows.Forms.Label();
             this.MenuPanel = new Component.Painel1();
+            this.btnSettings = new Component.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.Art = new System.Windows.Forms.Label();
-            this.FavouritesBtn = new Component.Button();
             this.CursesBtn = new Component.Button();
             this.ArtistsButton = new Component.Button();
             this.Homebtn = new Component.Button();
@@ -67,7 +67,7 @@
             // 
             this.panel1.Controls.Add(this.painel14);
             this.panel1.Location = new System.Drawing.Point(96, 7);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(772, 64);
             this.panel1.TabIndex = 1;
@@ -84,7 +84,7 @@
             this.painel14.GradientBottomColor = System.Drawing.Color.MistyRose;
             this.painel14.GradientTopColor = System.Drawing.Color.LightCoral;
             this.painel14.Location = new System.Drawing.Point(609, 7);
-            this.painel14.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.painel14.Margin = new System.Windows.Forms.Padding(2);
             this.painel14.Name = "painel14";
             this.painel14.Size = new System.Drawing.Size(160, 46);
             this.painel14.TabIndex = 5;
@@ -104,7 +104,7 @@
             this.userBtn.GradientTopColor = System.Drawing.Color.Transparent;
             this.userBtn.IsSelected = false;
             this.userBtn.Location = new System.Drawing.Point(104, 2);
-            this.userBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.userBtn.Margin = new System.Windows.Forms.Padding(2);
             this.userBtn.Name = "userBtn";
             this.userBtn.Size = new System.Drawing.Size(57, 58);
             this.userBtn.TabIndex = 5;
@@ -127,7 +127,7 @@
             this.cartBtn.GradientTopColor = System.Drawing.Color.Transparent;
             this.cartBtn.IsSelected = false;
             this.cartBtn.Location = new System.Drawing.Point(54, 3);
-            this.cartBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cartBtn.Margin = new System.Windows.Forms.Padding(2);
             this.cartBtn.Name = "cartBtn";
             this.cartBtn.Size = new System.Drawing.Size(56, 63);
             this.cartBtn.TabIndex = 6;
@@ -148,7 +148,7 @@
             this.notifyBtn.GradientTopColor = System.Drawing.Color.Transparent;
             this.notifyBtn.IsSelected = false;
             this.notifyBtn.Location = new System.Drawing.Point(17, 3);
-            this.notifyBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.notifyBtn.Margin = new System.Windows.Forms.Padding(2);
             this.notifyBtn.Name = "notifyBtn";
             this.notifyBtn.Size = new System.Drawing.Size(42, 48);
             this.notifyBtn.TabIndex = 6;
@@ -158,13 +158,13 @@
             // 
             this.panel2.Controls.Add(this.button2);
             this.panel2.Controls.Add(this.painel13);
-            this.panel2.Controls.Add(this.label6);
             this.panel2.Controls.Add(this.painel11);
             this.panel2.Location = new System.Drawing.Point(96, 80);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(772, 392);
             this.panel2.TabIndex = 2;
+            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // button2
             // 
@@ -181,7 +181,7 @@
             this.button2.GradientTopColor = System.Drawing.Color.Transparent;
             this.button2.IsSelected = false;
             this.button2.Location = new System.Drawing.Point(674, 335);
-            this.button2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button2.Margin = new System.Windows.Forms.Padding(2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(96, 57);
             this.button2.TabIndex = 0;
@@ -196,24 +196,12 @@
             this.painel13.GradientAngle = 140F;
             this.painel13.GradientBottomColor = System.Drawing.Color.Transparent;
             this.painel13.GradientTopColor = System.Drawing.Color.Transparent;
-            this.painel13.Location = new System.Drawing.Point(0, 171);
-            this.painel13.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.painel13.Location = new System.Drawing.Point(0, 169);
+            this.painel13.Margin = new System.Windows.Forms.Padding(2);
             this.painel13.Name = "painel13";
             this.painel13.Size = new System.Drawing.Size(770, 162);
             this.painel13.TabIndex = 4;
             this.painel13.Paint += new System.Windows.Forms.PaintEventHandler(this.painel13_Paint);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Tahoma", 14F);
-            this.label6.Location = new System.Drawing.Point(2, 145);
-            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(158, 23);
-            this.label6.TabIndex = 6;
-            this.label6.Text = "Nossas categorias";
-            this.label6.Click += new System.EventHandler(this.label6_Click);
             // 
             // painel11
             // 
@@ -230,11 +218,10 @@
             this.painel11.GradientBottomColor = System.Drawing.Color.Transparent;
             this.painel11.GradientTopColor = System.Drawing.Color.Transparent;
             this.painel11.Location = new System.Drawing.Point(0, 6);
-            this.painel11.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.painel11.Margin = new System.Windows.Forms.Padding(2);
             this.painel11.Name = "painel11";
             this.painel11.Size = new System.Drawing.Size(770, 117);
             this.painel11.TabIndex = 5;
-            this.painel11.Paint += new System.Windows.Forms.PaintEventHandler(this.painel11_Paint_1);
             // 
             // label5
             // 
@@ -267,7 +254,7 @@
             // 
             this.pictureBox1.Image = global::App.Properties.Resources.OIP_removebg_preview;
             this.pictureBox1.Location = new System.Drawing.Point(496, 1);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(172, 131);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -289,7 +276,7 @@
             this.button1.GradientTopColor = System.Drawing.Color.Maroon;
             this.button1.IsSelected = false;
             this.button1.Location = new System.Drawing.Point(136, 69);
-            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(97, 40);
             this.button1.TabIndex = 2;
@@ -330,7 +317,7 @@
             this.painel12.GradientBottomColor = System.Drawing.Color.Transparent;
             this.painel12.GradientTopColor = System.Drawing.Color.Transparent;
             this.painel12.Location = new System.Drawing.Point(98, 15);
-            this.painel12.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.painel12.Margin = new System.Windows.Forms.Padding(2);
             this.painel12.Name = "painel12";
             this.painel12.Size = new System.Drawing.Size(592, 46);
             this.painel12.TabIndex = 3;
@@ -350,7 +337,7 @@
             this.cancelBtn.GradientTopColor = System.Drawing.Color.Transparent;
             this.cancelBtn.IsSelected = false;
             this.cancelBtn.Location = new System.Drawing.Point(563, 2);
-            this.cancelBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cancelBtn.Margin = new System.Windows.Forms.Padding(2);
             this.cancelBtn.Name = "cancelBtn";
             this.cancelBtn.Size = new System.Drawing.Size(27, 48);
             this.cancelBtn.TabIndex = 7;
@@ -373,9 +360,9 @@
             // 
             this.MenuPanel.BackColor = System.Drawing.Color.White;
             this.MenuPanel.BorderRadius = 30;
+            this.MenuPanel.Controls.Add(this.btnSettings);
             this.MenuPanel.Controls.Add(this.label1);
             this.MenuPanel.Controls.Add(this.Art);
-            this.MenuPanel.Controls.Add(this.FavouritesBtn);
             this.MenuPanel.Controls.Add(this.CursesBtn);
             this.MenuPanel.Controls.Add(this.ArtistsButton);
             this.MenuPanel.Controls.Add(this.Homebtn);
@@ -384,11 +371,34 @@
             this.MenuPanel.GradientBottomColor = System.Drawing.Color.LightCoral;
             this.MenuPanel.GradientTopColor = System.Drawing.Color.LightCoral;
             this.MenuPanel.Location = new System.Drawing.Point(10, 11);
-            this.MenuPanel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MenuPanel.Margin = new System.Windows.Forms.Padding(2);
             this.MenuPanel.Name = "MenuPanel";
             this.MenuPanel.Size = new System.Drawing.Size(73, 461);
             this.MenuPanel.TabIndex = 0;
             this.MenuPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.painel11_Paint);
+            // 
+            // btnSettings
+            // 
+            this.btnSettings.BackColor = System.Drawing.Color.Transparent;
+            this.btnSettings.BackgroundColor = System.Drawing.Color.Transparent;
+            this.btnSettings.BorderColor = System.Drawing.Color.Firebrick;
+            this.btnSettings.BorderRadius = 50;
+            this.btnSettings.BorderSize = 0;
+            this.btnSettings.ButtonImage = ((System.Drawing.Image)(resources.GetObject("btnSettings.ButtonImage")));
+            this.btnSettings.ButtonText = "";
+            this.btnSettings.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSettings.GradientAngle = 90F;
+            this.btnSettings.GradientBottomColor = System.Drawing.Color.Transparent;
+            this.btnSettings.GradientTopColor = System.Drawing.Color.Transparent;
+            this.btnSettings.IsSelected = false;
+            this.btnSettings.Location = new System.Drawing.Point(14, 138);
+            this.btnSettings.Margin = new System.Windows.Forms.Padding(2);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(74, 41);
+            this.btnSettings.TabIndex = 7;
+            this.btnSettings.TextColor = System.Drawing.Color.White;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            this.btnSettings.Paint += new System.Windows.Forms.PaintEventHandler(this.btnSettings_Paint_1);
             // 
             // label1
             // 
@@ -417,29 +427,6 @@
             this.Art.TabIndex = 5;
             this.Art.Text = "Art";
             // 
-            // FavouritesBtn
-            // 
-            this.FavouritesBtn.BackColor = System.Drawing.Color.Transparent;
-            this.FavouritesBtn.BackgroundColor = System.Drawing.Color.Transparent;
-            this.FavouritesBtn.BorderColor = System.Drawing.Color.Firebrick;
-            this.FavouritesBtn.BorderRadius = 50;
-            this.FavouritesBtn.BorderSize = 0;
-            this.FavouritesBtn.ButtonImage = global::App.Properties.Resources.heart_solid__2_;
-            this.FavouritesBtn.ButtonText = "";
-            this.FavouritesBtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.FavouritesBtn.GradientAngle = 90F;
-            this.FavouritesBtn.GradientBottomColor = System.Drawing.Color.Transparent;
-            this.FavouritesBtn.GradientTopColor = System.Drawing.Color.Transparent;
-            this.FavouritesBtn.IsSelected = false;
-            this.FavouritesBtn.Location = new System.Drawing.Point(14, 322);
-            this.FavouritesBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.FavouritesBtn.Name = "FavouritesBtn";
-            this.FavouritesBtn.Size = new System.Drawing.Size(74, 41);
-            this.FavouritesBtn.TabIndex = 6;
-            this.FavouritesBtn.TextColor = System.Drawing.Color.White;
-            this.FavouritesBtn.Click += new System.EventHandler(this.BtnClick);
-            this.FavouritesBtn.Paint += new System.Windows.Forms.PaintEventHandler(this.FavouritesBtn_Paint);
-            // 
             // CursesBtn
             // 
             this.CursesBtn.BackColor = System.Drawing.Color.Transparent;
@@ -455,7 +442,7 @@
             this.CursesBtn.GradientTopColor = System.Drawing.Color.Transparent;
             this.CursesBtn.IsSelected = false;
             this.CursesBtn.Location = new System.Drawing.Point(14, 275);
-            this.CursesBtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.CursesBtn.Margin = new System.Windows.Forms.Padding(2);
             this.CursesBtn.Name = "CursesBtn";
             this.CursesBtn.Size = new System.Drawing.Size(74, 41);
             this.CursesBtn.TabIndex = 5;
@@ -478,7 +465,7 @@
             this.ArtistsButton.GradientTopColor = System.Drawing.Color.Transparent;
             this.ArtistsButton.IsSelected = false;
             this.ArtistsButton.Location = new System.Drawing.Point(14, 229);
-            this.ArtistsButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.ArtistsButton.Margin = new System.Windows.Forms.Padding(2);
             this.ArtistsButton.Name = "ArtistsButton";
             this.ArtistsButton.Size = new System.Drawing.Size(74, 41);
             this.ArtistsButton.TabIndex = 5;
@@ -501,7 +488,7 @@
             this.Homebtn.GradientTopColor = System.Drawing.Color.Transparent;
             this.Homebtn.IsSelected = false;
             this.Homebtn.Location = new System.Drawing.Point(14, 183);
-            this.Homebtn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Homebtn.Margin = new System.Windows.Forms.Padding(2);
             this.Homebtn.Name = "Homebtn";
             this.Homebtn.Size = new System.Drawing.Size(74, 41);
             this.Homebtn.TabIndex = 0;
@@ -509,7 +496,7 @@
             this.Homebtn.Click += new System.EventHandler(this.BtnClick);
             this.Homebtn.Paint += new System.Windows.Forms.PaintEventHandler(this.button2_Paint);
             // 
-            // Form1
+            // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -521,17 +508,16 @@
             this.Controls.Add(this.MenuPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Location = new System.Drawing.Point(50, 50);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.Name = "Form1";
-            this.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Name = "Form3";
+            this.Padding = new System.Windows.Forms.Padding(8);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "f";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Click += new System.EventHandler(this.BtnClick);
             this.panel1.ResumeLayout(false);
             this.painel14.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.painel11.ResumeLayout(false);
             this.painel11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -553,7 +539,6 @@
         private Component.Button Homebtn;
         private Component.Button ArtistsButton;
         private Component.Button CursesBtn;
-        private Component.Button FavouritesBtn;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label Art;
         private Component.Button userBtn;
@@ -568,9 +553,9 @@
         private Component.Button button1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private Component.Button button2;
+        private Component.Button btnSettings;
     }
 }
 

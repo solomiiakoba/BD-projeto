@@ -7,7 +7,7 @@ namespace App
 {
     public partial class Register : Form
     {
-        private string connectionString = "Server=SOLOMIIA;Database=Projeto;Integrated Security=true;";
+        private string connectionString = "Data Source=tcp:mednat.ieeta.pt\\SQLSERVER,8101;Initial Catalog=p11g6;User Id=p11g6;Password=-1680827155@BD";
         private string tipoUtilizadorSelecionado = "";
 
         public Register()

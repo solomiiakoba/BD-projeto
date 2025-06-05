@@ -11,7 +11,7 @@ namespace App{
     {
         private int cursoId;
         private int clienteId; // ID do cliente logado
-        private string connectionString = "Data Source=SOLOMIIA;Initial Catalog=Projeto;Integrated Security=True";
+        private string connectionString = "Data Source=tcp:mednat.ieeta.pt\\SQLSERVER,8101;Initial Catalog=p11g6;User Id=p11g6;Password=-1680827155@BD";
         private CursoInfo cursoAtual;
         private List<TurmaInfo> turmasDisponiveis;
         private decimal precoFinal = 0;
