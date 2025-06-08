@@ -30,11 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form3));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.painel14 = new Component.Painel1();
-            this.userBtn = new Component.Button();
-            this.cartBtn = new Component.Button();
-            this.notifyBtn = new Component.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.painel12 = new Component.Painel1();
+            this.cancelBtn = new Component.Button();
+            this.searchLab = new System.Windows.Forms.Label();
             this.button2 = new Component.Button();
             this.painel13 = new Component.Painel1();
             this.painel11 = new Component.Painel1();
@@ -44,22 +43,22 @@
             this.button1 = new Component.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.painel12 = new Component.Painel1();
-            this.cancelBtn = new Component.Button();
-            this.searchLab = new System.Windows.Forms.Label();
+            this.painel14 = new Component.Painel1();
+            this.userBtn = new Component.Button();
+            this.cartBtn = new Component.Button();
+            this.notifyBtn = new Component.Button();
             this.MenuPanel = new Component.Painel1();
             this.btnSettings = new Component.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.Art = new System.Windows.Forms.Label();
-            this.CursesBtn = new Component.Button();
             this.ArtistsButton = new Component.Button();
             this.Homebtn = new Component.Button();
             this.panel1.SuspendLayout();
-            this.painel14.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.painel12.SuspendLayout();
             this.painel11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.painel12.SuspendLayout();
+            this.painel14.SuspendLayout();
             this.MenuPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -72,88 +71,6 @@
             this.panel1.Size = new System.Drawing.Size(772, 64);
             this.panel1.TabIndex = 1;
             // 
-            // painel14
-            // 
-            this.painel14.BackColor = System.Drawing.Color.White;
-            this.painel14.BorderRadius = 30;
-            this.painel14.Controls.Add(this.userBtn);
-            this.painel14.Controls.Add(this.cartBtn);
-            this.painel14.Controls.Add(this.notifyBtn);
-            this.painel14.ForeColor = System.Drawing.Color.Black;
-            this.painel14.GradientAngle = 140F;
-            this.painel14.GradientBottomColor = System.Drawing.Color.MistyRose;
-            this.painel14.GradientTopColor = System.Drawing.Color.LightCoral;
-            this.painel14.Location = new System.Drawing.Point(609, 7);
-            this.painel14.Margin = new System.Windows.Forms.Padding(2);
-            this.painel14.Name = "painel14";
-            this.painel14.Size = new System.Drawing.Size(160, 46);
-            this.painel14.TabIndex = 5;
-            // 
-            // userBtn
-            // 
-            this.userBtn.BackColor = System.Drawing.Color.Transparent;
-            this.userBtn.BackgroundColor = System.Drawing.Color.Transparent;
-            this.userBtn.BorderColor = System.Drawing.Color.MistyRose;
-            this.userBtn.BorderRadius = 60;
-            this.userBtn.BorderSize = 0;
-            this.userBtn.ButtonImage = global::App.Properties.Resources.user_solid;
-            this.userBtn.ButtonText = "";
-            this.userBtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.userBtn.GradientAngle = 90F;
-            this.userBtn.GradientBottomColor = System.Drawing.Color.Transparent;
-            this.userBtn.GradientTopColor = System.Drawing.Color.Transparent;
-            this.userBtn.IsSelected = false;
-            this.userBtn.Location = new System.Drawing.Point(104, 2);
-            this.userBtn.Margin = new System.Windows.Forms.Padding(2);
-            this.userBtn.Name = "userBtn";
-            this.userBtn.Size = new System.Drawing.Size(57, 58);
-            this.userBtn.TabIndex = 5;
-            this.userBtn.TextColor = System.Drawing.Color.Transparent;
-            this.userBtn.Click += new System.EventHandler(this.userBtn_Click);
-            this.userBtn.Paint += new System.Windows.Forms.PaintEventHandler(this.userBtn_Paint);
-            // 
-            // cartBtn
-            // 
-            this.cartBtn.BackColor = System.Drawing.Color.Transparent;
-            this.cartBtn.BackgroundColor = System.Drawing.Color.Transparent;
-            this.cartBtn.BorderColor = System.Drawing.Color.MistyRose;
-            this.cartBtn.BorderRadius = 60;
-            this.cartBtn.BorderSize = 0;
-            this.cartBtn.ButtonImage = global::App.Properties.Resources.cart_shopping_solid__2_;
-            this.cartBtn.ButtonText = "";
-            this.cartBtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.cartBtn.GradientAngle = 90F;
-            this.cartBtn.GradientBottomColor = System.Drawing.Color.Transparent;
-            this.cartBtn.GradientTopColor = System.Drawing.Color.Transparent;
-            this.cartBtn.IsSelected = false;
-            this.cartBtn.Location = new System.Drawing.Point(54, 3);
-            this.cartBtn.Margin = new System.Windows.Forms.Padding(2);
-            this.cartBtn.Name = "cartBtn";
-            this.cartBtn.Size = new System.Drawing.Size(56, 63);
-            this.cartBtn.TabIndex = 6;
-            this.cartBtn.TextColor = System.Drawing.Color.Transparent;
-            // 
-            // notifyBtn
-            // 
-            this.notifyBtn.BackColor = System.Drawing.Color.Transparent;
-            this.notifyBtn.BackgroundColor = System.Drawing.Color.Transparent;
-            this.notifyBtn.BorderColor = System.Drawing.Color.MistyRose;
-            this.notifyBtn.BorderRadius = 60;
-            this.notifyBtn.BorderSize = 0;
-            this.notifyBtn.ButtonImage = global::App.Properties.Resources.bell_solid;
-            this.notifyBtn.ButtonText = "";
-            this.notifyBtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.notifyBtn.GradientAngle = 90F;
-            this.notifyBtn.GradientBottomColor = System.Drawing.Color.Transparent;
-            this.notifyBtn.GradientTopColor = System.Drawing.Color.Transparent;
-            this.notifyBtn.IsSelected = false;
-            this.notifyBtn.Location = new System.Drawing.Point(17, 3);
-            this.notifyBtn.Margin = new System.Windows.Forms.Padding(2);
-            this.notifyBtn.Name = "notifyBtn";
-            this.notifyBtn.Size = new System.Drawing.Size(42, 48);
-            this.notifyBtn.TabIndex = 6;
-            this.notifyBtn.TextColor = System.Drawing.Color.Transparent;
-            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.button2);
@@ -165,6 +82,56 @@
             this.panel2.Size = new System.Drawing.Size(772, 392);
             this.panel2.TabIndex = 2;
             this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
+            // 
+            // painel12
+            // 
+            this.painel12.BackColor = System.Drawing.Color.White;
+            this.painel12.BorderRadius = 30;
+            this.painel12.Controls.Add(this.cancelBtn);
+            this.painel12.Controls.Add(this.searchLab);
+            this.painel12.ForeColor = System.Drawing.Color.Black;
+            this.painel12.GradientAngle = 140F;
+            this.painel12.GradientBottomColor = System.Drawing.Color.Transparent;
+            this.painel12.GradientTopColor = System.Drawing.Color.Transparent;
+            this.painel12.Location = new System.Drawing.Point(98, 15);
+            this.painel12.Margin = new System.Windows.Forms.Padding(2);
+            this.painel12.Name = "painel12";
+            this.painel12.Size = new System.Drawing.Size(592, 46);
+            this.painel12.TabIndex = 3;
+            // 
+            // cancelBtn
+            // 
+            this.cancelBtn.BackColor = System.Drawing.Color.Transparent;
+            this.cancelBtn.BackgroundColor = System.Drawing.Color.Transparent;
+            this.cancelBtn.BorderColor = System.Drawing.Color.MistyRose;
+            this.cancelBtn.BorderRadius = 60;
+            this.cancelBtn.BorderSize = 0;
+            this.cancelBtn.ButtonImage = global::App.Properties.Resources.xmark_solid__1_;
+            this.cancelBtn.ButtonText = "";
+            this.cancelBtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.cancelBtn.GradientAngle = 90F;
+            this.cancelBtn.GradientBottomColor = System.Drawing.Color.Transparent;
+            this.cancelBtn.GradientTopColor = System.Drawing.Color.Transparent;
+            this.cancelBtn.IsSelected = false;
+            this.cancelBtn.Location = new System.Drawing.Point(563, 2);
+            this.cancelBtn.Margin = new System.Windows.Forms.Padding(2);
+            this.cancelBtn.Name = "cancelBtn";
+            this.cancelBtn.Size = new System.Drawing.Size(27, 48);
+            this.cancelBtn.TabIndex = 7;
+            this.cancelBtn.TextColor = System.Drawing.Color.Transparent;
+            // 
+            // searchLab
+            // 
+            this.searchLab.AutoSize = true;
+            this.searchLab.BackColor = System.Drawing.Color.Transparent;
+            this.searchLab.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.searchLab.ForeColor = System.Drawing.Color.Black;
+            this.searchLab.Location = new System.Drawing.Point(11, 11);
+            this.searchLab.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.searchLab.Name = "searchLab";
+            this.searchLab.Size = new System.Drawing.Size(60, 20);
+            this.searchLab.TabIndex = 6;
+            this.searchLab.Text = "Search";
             // 
             // button2
             // 
@@ -253,7 +220,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = global::App.Properties.Resources.OIP_removebg_preview;
-            this.pictureBox1.Location = new System.Drawing.Point(496, 1);
+            this.pictureBox1.Location = new System.Drawing.Point(565, -11);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(172, 131);
@@ -306,55 +273,87 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Onde a criatividade encontra expressão!\r\n";
             // 
-            // painel12
+            // painel14
             // 
-            this.painel12.BackColor = System.Drawing.Color.White;
-            this.painel12.BorderRadius = 30;
-            this.painel12.Controls.Add(this.cancelBtn);
-            this.painel12.Controls.Add(this.searchLab);
-            this.painel12.ForeColor = System.Drawing.Color.Black;
-            this.painel12.GradientAngle = 140F;
-            this.painel12.GradientBottomColor = System.Drawing.Color.Transparent;
-            this.painel12.GradientTopColor = System.Drawing.Color.Transparent;
-            this.painel12.Location = new System.Drawing.Point(98, 15);
-            this.painel12.Margin = new System.Windows.Forms.Padding(2);
-            this.painel12.Name = "painel12";
-            this.painel12.Size = new System.Drawing.Size(592, 46);
-            this.painel12.TabIndex = 3;
+            this.painel14.BackColor = System.Drawing.Color.White;
+            this.painel14.BorderRadius = 30;
+            this.painel14.Controls.Add(this.userBtn);
+            this.painel14.Controls.Add(this.cartBtn);
+            this.painel14.Controls.Add(this.notifyBtn);
+            this.painel14.ForeColor = System.Drawing.Color.Black;
+            this.painel14.GradientAngle = 140F;
+            this.painel14.GradientBottomColor = System.Drawing.Color.MistyRose;
+            this.painel14.GradientTopColor = System.Drawing.Color.LightCoral;
+            this.painel14.Location = new System.Drawing.Point(609, 7);
+            this.painel14.Margin = new System.Windows.Forms.Padding(2);
+            this.painel14.Name = "painel14";
+            this.painel14.Size = new System.Drawing.Size(160, 46);
+            this.painel14.TabIndex = 5;
             // 
-            // cancelBtn
+            // userBtn
             // 
-            this.cancelBtn.BackColor = System.Drawing.Color.Transparent;
-            this.cancelBtn.BackgroundColor = System.Drawing.Color.Transparent;
-            this.cancelBtn.BorderColor = System.Drawing.Color.MistyRose;
-            this.cancelBtn.BorderRadius = 60;
-            this.cancelBtn.BorderSize = 0;
-            this.cancelBtn.ButtonImage = global::App.Properties.Resources.xmark_solid__1_;
-            this.cancelBtn.ButtonText = "";
-            this.cancelBtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.cancelBtn.GradientAngle = 90F;
-            this.cancelBtn.GradientBottomColor = System.Drawing.Color.Transparent;
-            this.cancelBtn.GradientTopColor = System.Drawing.Color.Transparent;
-            this.cancelBtn.IsSelected = false;
-            this.cancelBtn.Location = new System.Drawing.Point(563, 2);
-            this.cancelBtn.Margin = new System.Windows.Forms.Padding(2);
-            this.cancelBtn.Name = "cancelBtn";
-            this.cancelBtn.Size = new System.Drawing.Size(27, 48);
-            this.cancelBtn.TabIndex = 7;
-            this.cancelBtn.TextColor = System.Drawing.Color.Transparent;
+            this.userBtn.BackColor = System.Drawing.Color.Transparent;
+            this.userBtn.BackgroundColor = System.Drawing.Color.Transparent;
+            this.userBtn.BorderColor = System.Drawing.Color.MistyRose;
+            this.userBtn.BorderRadius = 60;
+            this.userBtn.BorderSize = 0;
+            this.userBtn.ButtonImage = global::App.Properties.Resources.user_solid;
+            this.userBtn.ButtonText = "";
+            this.userBtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.userBtn.GradientAngle = 90F;
+            this.userBtn.GradientBottomColor = System.Drawing.Color.Transparent;
+            this.userBtn.GradientTopColor = System.Drawing.Color.Transparent;
+            this.userBtn.IsSelected = false;
+            this.userBtn.Location = new System.Drawing.Point(104, 2);
+            this.userBtn.Margin = new System.Windows.Forms.Padding(2);
+            this.userBtn.Name = "userBtn";
+            this.userBtn.Size = new System.Drawing.Size(57, 58);
+            this.userBtn.TabIndex = 5;
+            this.userBtn.TextColor = System.Drawing.Color.Transparent;
+            this.userBtn.Click += new System.EventHandler(this.userBtn_Click);
+            this.userBtn.Paint += new System.Windows.Forms.PaintEventHandler(this.userBtn_Paint);
             // 
-            // searchLab
+            // cartBtn
             // 
-            this.searchLab.AutoSize = true;
-            this.searchLab.BackColor = System.Drawing.Color.Transparent;
-            this.searchLab.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.searchLab.ForeColor = System.Drawing.Color.Black;
-            this.searchLab.Location = new System.Drawing.Point(11, 11);
-            this.searchLab.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.searchLab.Name = "searchLab";
-            this.searchLab.Size = new System.Drawing.Size(60, 20);
-            this.searchLab.TabIndex = 6;
-            this.searchLab.Text = "Search";
+            this.cartBtn.BackColor = System.Drawing.Color.Transparent;
+            this.cartBtn.BackgroundColor = System.Drawing.Color.Transparent;
+            this.cartBtn.BorderColor = System.Drawing.Color.MistyRose;
+            this.cartBtn.BorderRadius = 60;
+            this.cartBtn.BorderSize = 0;
+            this.cartBtn.ButtonImage = global::App.Properties.Resources.cart_shopping_solid__2_;
+            this.cartBtn.ButtonText = "";
+            this.cartBtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.cartBtn.GradientAngle = 90F;
+            this.cartBtn.GradientBottomColor = System.Drawing.Color.Transparent;
+            this.cartBtn.GradientTopColor = System.Drawing.Color.Transparent;
+            this.cartBtn.IsSelected = false;
+            this.cartBtn.Location = new System.Drawing.Point(54, 3);
+            this.cartBtn.Margin = new System.Windows.Forms.Padding(2);
+            this.cartBtn.Name = "cartBtn";
+            this.cartBtn.Size = new System.Drawing.Size(56, 63);
+            this.cartBtn.TabIndex = 6;
+            this.cartBtn.TextColor = System.Drawing.Color.Transparent;
+            // 
+            // notifyBtn
+            // 
+            this.notifyBtn.BackColor = System.Drawing.Color.Transparent;
+            this.notifyBtn.BackgroundColor = System.Drawing.Color.Transparent;
+            this.notifyBtn.BorderColor = System.Drawing.Color.MistyRose;
+            this.notifyBtn.BorderRadius = 60;
+            this.notifyBtn.BorderSize = 0;
+            this.notifyBtn.ButtonImage = global::App.Properties.Resources.bell_solid;
+            this.notifyBtn.ButtonText = "";
+            this.notifyBtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.notifyBtn.GradientAngle = 90F;
+            this.notifyBtn.GradientBottomColor = System.Drawing.Color.Transparent;
+            this.notifyBtn.GradientTopColor = System.Drawing.Color.Transparent;
+            this.notifyBtn.IsSelected = false;
+            this.notifyBtn.Location = new System.Drawing.Point(17, 3);
+            this.notifyBtn.Margin = new System.Windows.Forms.Padding(2);
+            this.notifyBtn.Name = "notifyBtn";
+            this.notifyBtn.Size = new System.Drawing.Size(42, 48);
+            this.notifyBtn.TabIndex = 6;
+            this.notifyBtn.TextColor = System.Drawing.Color.Transparent;
             // 
             // MenuPanel
             // 
@@ -363,7 +362,6 @@
             this.MenuPanel.Controls.Add(this.btnSettings);
             this.MenuPanel.Controls.Add(this.label1);
             this.MenuPanel.Controls.Add(this.Art);
-            this.MenuPanel.Controls.Add(this.CursesBtn);
             this.MenuPanel.Controls.Add(this.ArtistsButton);
             this.MenuPanel.Controls.Add(this.Homebtn);
             this.MenuPanel.ForeColor = System.Drawing.Color.Black;
@@ -391,7 +389,7 @@
             this.btnSettings.GradientBottomColor = System.Drawing.Color.Transparent;
             this.btnSettings.GradientTopColor = System.Drawing.Color.Transparent;
             this.btnSettings.IsSelected = false;
-            this.btnSettings.Location = new System.Drawing.Point(14, 138);
+            this.btnSettings.Location = new System.Drawing.Point(14, 274);
             this.btnSettings.Margin = new System.Windows.Forms.Padding(2);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(74, 41);
@@ -426,29 +424,6 @@
             this.Art.Size = new System.Drawing.Size(39, 25);
             this.Art.TabIndex = 5;
             this.Art.Text = "Art";
-            // 
-            // CursesBtn
-            // 
-            this.CursesBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CursesBtn.BackgroundColor = System.Drawing.Color.Transparent;
-            this.CursesBtn.BorderColor = System.Drawing.Color.Firebrick;
-            this.CursesBtn.BorderRadius = 50;
-            this.CursesBtn.BorderSize = 0;
-            this.CursesBtn.ButtonImage = global::App.Properties.Resources.graduation_cap_solid;
-            this.CursesBtn.ButtonText = "";
-            this.CursesBtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.CursesBtn.GradientAngle = 90F;
-            this.CursesBtn.GradientBottomColor = System.Drawing.Color.Transparent;
-            this.CursesBtn.GradientTopColor = System.Drawing.Color.Transparent;
-            this.CursesBtn.IsSelected = false;
-            this.CursesBtn.Location = new System.Drawing.Point(14, 275);
-            this.CursesBtn.Margin = new System.Windows.Forms.Padding(2);
-            this.CursesBtn.Name = "CursesBtn";
-            this.CursesBtn.Size = new System.Drawing.Size(74, 41);
-            this.CursesBtn.TabIndex = 5;
-            this.CursesBtn.TextColor = System.Drawing.Color.White;
-            this.CursesBtn.Click += new System.EventHandler(this.BtnClick);
-            this.CursesBtn.Paint += new System.Windows.Forms.PaintEventHandler(this.CursesBtn_Paint);
             // 
             // ArtistsButton
             // 
@@ -516,13 +491,13 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Click += new System.EventHandler(this.BtnClick);
             this.panel1.ResumeLayout(false);
-            this.painel14.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            this.painel12.ResumeLayout(false);
+            this.painel12.PerformLayout();
             this.painel11.ResumeLayout(false);
             this.painel11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.painel12.ResumeLayout(false);
-            this.painel12.PerformLayout();
+            this.painel14.ResumeLayout(false);
             this.MenuPanel.ResumeLayout(false);
             this.MenuPanel.PerformLayout();
             this.ResumeLayout(false);
@@ -538,7 +513,6 @@
         private Component.Painel1 painel13;
         private Component.Button Homebtn;
         private Component.Button ArtistsButton;
-        private Component.Button CursesBtn;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label Art;
         private Component.Button userBtn;

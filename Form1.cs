@@ -66,11 +66,11 @@ namespace App
         {
             if (idUtilizadorAtual > 0)
             {
-                userBtn.ButtonImage = Properties.Resources.user_solid; // Ícone de usuário logado
+                userBtn.ButtonImage = Properties.Resources.user_solid; 
             }
             else
             {
-                userBtn.ButtonImage = Properties.Resources.user_regular; // Ícone de usuário não logado
+                userBtn.ButtonImage = Properties.Resources.user_regular; 
             }
         }
         private void LoadCategoriesFromDatabase()
@@ -94,8 +94,8 @@ namespace App
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = @"SELECT c.id, c.nome_categoria, COUNT(t.id) as trabalhos_count
-                               FROM Categoria c
-                               LEFT JOIN Trabalho t ON c.id = t.id_categoria
+                               FROM projeto.Categoria c
+                               LEFT JOIN projeto.Trabalho t ON c.id = t.id_categoria
                                GROUP BY c.id, c.nome_categoria
                                ORDER BY c.id";
 
@@ -197,8 +197,8 @@ namespace App
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = @"SELECT a.id, u.nome, a.especialidade, a.bibliografia, a.disponibilidade, u.email, u.telefone
-                               FROM Artista a
-                               INNER JOIN Utilizador u ON a.id = u.id
+                               FROM projeto.Artista a
+                               INNER JOIN projeto.Utilizador u ON a.id = u.id
                                ORDER BY u.nome";
 
                 SqlCommand command = new SqlCommand(query, connection);
@@ -396,8 +396,8 @@ namespace App
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = @"SELECT a.id, u.nome, a.especialidade, a.bibliografia, a.disponibilidade, u.email, u.telefone
-                               FROM Artista a
-                               INNER JOIN Utilizador u ON a.id = u.id
+                               FROM projeto.Artista a
+                               INNER JOIN projeto.Utilizador u ON a.id = u.id
                                WHERE a.id = @ArtistaId";
 
                 SqlCommand command = new SqlCommand(query, connection);
@@ -475,7 +475,7 @@ namespace App
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT nome_categoria FROM Categoria WHERE id = @CategoryId";
+                string query = "SELECT nome_categoria FROM projeto.Categoria WHERE id = @CategoryId";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@CategoryId", categoryId);
 
@@ -740,7 +740,7 @@ namespace App
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT id, titulo, descricao, disponibilidade, preco FROM Trabalho WHERE id_categoria = @CategoryId";
+                string query = "SELECT id, titulo, descricao, disponibilidade, preco FROM projeto.Trabalho WHERE id_categoria = @CategoryId";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@CategoryId", categoryId);
 
@@ -1017,10 +1017,10 @@ namespace App
                 c.capacidade,
                 u.nome AS NomeArtista,
                 t.nivel AS NivelTurma
-            FROM Curso c
-            JOIN Artista a ON c.id_artista = a.id
-            JOIN Utilizador u ON a.id = u.id
-            LEFT JOIN Turma t ON t.id_curso = c.id
+            FROM projeto.Curso c
+            JOIN projeto.Artista a ON c.id_artista = a.id
+            JOIN projeto.Utilizador u ON a.id = u.id
+            LEFT JOIN projeto.Turma t ON t.id_curso = c.id
             ORDER BY c.data_inicio, c.id, t.nivel;
             ";
                 SqlCommand command = new SqlCommand(query, connection);
@@ -1224,9 +1224,9 @@ namespace App
                     c.formato,
                     c.capacidade,
                     u.nome AS NomeArtista
-                FROM Curso c
-                INNER JOIN Artista a ON c.id_artista = a.id
-                INNER JOIN Utilizador u ON a.id = u.id
+                FROM projeto.Curso c
+                INNER JOIN projeto.Artista a ON c.id_artista = a.id
+                INNER JOIN projeto.Utilizador u ON a.id = u.id
                 WHERE c.id IN ({ids})";
 
                     SqlCommand command = new SqlCommand(query, connection);
@@ -1413,9 +1413,21 @@ namespace App
                     UpdateUIAfterLogin();
                     RefreshCurrentView();
 
-                    // Mostra mensagem de boas-vindas
-                    MessageBox.Show($"Bem-vindo de volta, {SessaoUtilizador.Nome}!", "Login",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // Verifica se o usuário é um artista
+                    if (IsArtista(idUtilizadorAtual))
+                    {
+                        // Fecha o Form1 e abre o Form3
+                        this.Hide();
+                        Form3 formArtista = new Form3(idUtilizadorAtual);
+                        formArtista.ShowDialog();
+                        this.Close();
+                    }
+                    else
+                    {
+                        // Mostra mensagem de boas-vindas para cliente
+                        MessageBox.Show($"Bem-vindo de volta, {SessaoUtilizador.Nome}!", "Login",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
             }
             else
@@ -1435,6 +1447,29 @@ namespace App
                     MessageBox.Show("Você saiu da sua conta.", "Logout",
                                    MessageBoxButtons.OK,
                                    MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        // Método para verificar se o usuário é um artista
+        private bool IsArtista(int userId)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT COUNT(*) FROM projeto.Artista WHERE id = @UserId";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@UserId", userId);
+
+                try
+                {
+                    connection.Open();
+                    int count = (int)command.ExecuteScalar();
+                    return count > 0;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao verificar tipo de usuário: " + ex.Message);
+                    return false;
                 }
             }
         }

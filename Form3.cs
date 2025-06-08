@@ -96,8 +96,8 @@ namespace App
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = @"SELECT c.id, c.nome_categoria, COUNT(t.id) as trabalhos_count
-                               FROM Categoria c
-                               LEFT JOIN Trabalho t ON c.id = t.id_categoria
+                               FROM projeto.Categoria c
+                               LEFT JOIN projeto.Trabalho t ON c.id = t.id_categoria
                                GROUP BY c.id, c.nome_categoria
                                ORDER BY c.id";
 
@@ -126,76 +126,6 @@ namespace App
             }
             return categories;
         }
-
-        private List<PortfolioInfo> GetPortfoliosDoArtista(int idArtista)
-        {
-            List<PortfolioInfo> lista = new List<PortfolioInfo>();
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string query = "SELECT id, nome FROM Portfolio WHERE artista = @id";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@id", idArtista);
-                conn.Open();
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        lista.Add(new PortfolioInfo
-                        {
-                            Id = reader.GetInt32(0),
-                            Nome = reader.GetString(1)
-                        });
-                    }
-                }
-            }
-
-            return lista;
-        }
-
-
-        private List<CursoInfo> GetCursosDoArtista(int idArtista)
-        {
-            List<CursoInfo> lista = new List<CursoInfo>();
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string query = @"
-            SELECT c.id, c.nome, c.preco, c.descricao, c.data_inicio, c.data_fim,
-                   c.formato, c.capacidade, u.nome as nome_artista
-            FROM Curso c
-            INNER JOIN Artista a ON c.id_artista = a.id
-            INNER JOIN Utilizador u ON a.id = u.id
-            WHERE a.id = @idArtista";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@idArtista", idArtista);
-                conn.Open();
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        lista.Add(new CursoInfo
-                        {
-                            Id = reader.GetInt32(0),
-                            NomeCurso = reader.GetString(1),
-                            Preco = reader.GetDecimal(2),
-                            Descricao = reader.IsDBNull(3) ? "Sem descrição" : reader.GetString(3),
-                            DataInicio = reader.GetDateTime(4),
-                            DataFim = reader.GetDateTime(5),
-                            Formato = reader.IsDBNull(6) ? "N/A" : reader.GetString(6),
-                            Capacidade = reader.GetInt32(7),
-                            NomeArtista = reader.GetString(8)
-                        });
-                    }
-                }
-            }
-
-            return lista;
-        }
-
 
 
         private void ShowProjetos()
@@ -310,8 +240,8 @@ namespace App
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = @"SELECT a.id, u.nome, a.especialidade, a.bibliografia, a.disponibilidade, u.email, u.telefone
-                               FROM Artista a
-                               INNER JOIN Utilizador u ON a.id = u.id
+                               FROM projeto.Artista a
+                               INNER JOIN projeto.Utilizador u ON a.id = u.id
                                ORDER BY u.nome";
 
                 SqlCommand command = new SqlCommand(query, connection);
@@ -509,8 +439,8 @@ namespace App
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = @"SELECT a.id, u.nome, a.especialidade, a.bibliografia, a.disponibilidade, u.email, u.telefone
-                               FROM Artista a
-                               INNER JOIN Utilizador u ON a.id = u.id
+                               FROM projeto.Artista a
+                               INNER JOIN projeto.Utilizador u ON a.id = u.id
                                WHERE a.id = @ArtistaId";
 
                 SqlCommand command = new SqlCommand(query, connection);
@@ -588,7 +518,7 @@ namespace App
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT nome_categoria FROM Categoria WHERE id = @CategoryId";
+                string query = "SELECT nome_categoria FROM projeto.Categoria WHERE id = @CategoryId";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@CategoryId", categoryId);
 
@@ -853,7 +783,7 @@ namespace App
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT id, titulo, descricao, disponibilidade, preco FROM Trabalho WHERE id_categoria = @CategoryId";
+                string query = "SELECT id, titulo, descricao, disponibilidade, preco FROM projeto.Trabalho WHERE id_categoria = @CategoryId";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@CategoryId", categoryId);
 
@@ -1130,10 +1060,10 @@ namespace App
                 c.capacidade,
                 u.nome AS NomeArtista,
                 t.nivel AS NivelTurma
-            FROM Curso c
-            JOIN Artista a ON c.id_artista = a.id
-            JOIN Utilizador u ON a.id = u.id
-            LEFT JOIN Turma t ON t.id_curso = c.id
+            FROM projeto.Curso c
+            JOIN projeto.Artista a ON c.id_artista = a.id
+            JOIN projeto.Utilizador u ON a.id = u.id
+            LEFT JOIN projeto.Turma t ON t.id_curso = c.id
             ORDER BY c.data_inicio, c.id, t.nivel;
             ";
                 SqlCommand command = new SqlCommand(query, connection);
@@ -1268,125 +1198,12 @@ namespace App
             }
         }
 
-        private List<CursoInfo> GetCursosByIds(List<int> cursoIds)
-        {
-            List<CursoInfo> cursos = new List<CursoInfo>();
-            if (cursoIds.Count == 0) return cursos;
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    connection.Open();
-                    string ids = string.Join(",", cursoIds);
-                    string query = $@"
-                SELECT 
-                    c.id AS CursoId,
-                    c.nome AS NomeCurso,
-                    c.descricao,
-                    c.preco,
-                    c.data_inicio,
-                    c.data_fim,
-                    c.formato,
-                    c.capacidade,
-                    u.nome AS NomeArtista
-                FROM Curso c
-                INNER JOIN Artista a ON c.id_artista = a.id
-                INNER JOIN Utilizador u ON a.id = u.id
-                WHERE c.id IN ({ids})";
-
-                    SqlCommand command = new SqlCommand(query, connection);
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            cursos.Add(new CursoInfo
-                            {
-                                Id = reader.IsDBNull(0) ? 0 : reader.GetInt32(0),
-                                NomeCurso = reader.IsDBNull(1) ? "" : reader.GetString(1),
-                                Preco = reader.IsDBNull(2) ? 0 : reader.GetDecimal(2),
-                                Descricao = reader.IsDBNull(3) ? "Sem descrição" : reader.GetString(3),
-                                DataInicio = reader.IsDBNull(4) ? DateTime.MinValue : reader.GetDateTime(4),
-                                DataFim = reader.IsDBNull(5) ? DateTime.MinValue : reader.GetDateTime(5),
-                                Formato = reader.IsDBNull(6) ? "Formato não informado" : reader.GetString(6),
-                                Capacidade = reader.IsDBNull(7) ? 0 : reader.GetInt32(7),
-                                NomeArtista = reader.IsDBNull(8) ? "Desconhecido" : reader.GetString(8),
-                                NiveisTurmas = reader.IsDBNull(9) ? "Não definidos" : reader.GetString(9)
-                            });
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erro ao carregar dados dos cursos: " + ex.Message);
-                }
-            }
-
-            return cursos;
-        }
-
-        private void AdicionarMaisBotoes()
-        {
-            // Primeiro botão - Projetos
-            System.Windows.Forms.Button btnProjetos = new System.Windows.Forms.Button
-            {
-                Text = "Projetos",
-                Name = "ProjetosBtn",
-                Width = 150,
-                Height = 40,
-                BackColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                Font = new Font("Tahoma", 10),
-                Margin = new Padding(10)
-            };
-            btnProjetos.Click += (s, e) => ShowProjetos(); 
-            painel13.Controls.Add(btnProjetos);
-
-            System.Windows.Forms.Button btnEstatisticas = new System.Windows.Forms.Button
-            {
-                Text = "Estatísticas",
-                Name = "EstatisticasBtn",
-                Width = 150,
-                Height = 40,
-                BackColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                Font = new Font("Tahoma", 10),
-                Margin = new Padding(10)
-            };
-            btnEstatisticas.Click += (s, e) => ShowEstatisticas();
-            painel13.Controls.Add(btnEstatisticas);
-
-            // Terceiro botão - Definições
-            System.Windows.Forms.Button btnDefinicoes = new System.Windows.Forms.Button
-            {
-                Text = "Definições",
-                Name = "DefinicoesBtn",
-                Width = 150,
-                Height = 40,
-                BackColor = Color.White,
-                FlatStyle = FlatStyle.Flat,
-                Font = new Font("Tahoma", 10),
-                Margin = new Padding(10)
-            };
-            btnDefinicoes.Click += (s, e) => ShowDefinicoes();
-            painel13.Controls.Add(btnDefinicoes);
-        }
-
         private void ShowPainelGestaoArtista()
         {
             painel13.Controls.Clear();
             painel13.Dock = DockStyle.Fill;
             painel13.Padding = new Padding(20);
 
-            Label titulo = new Label
-            {
-                Text = "Gestão do Artista",
-                Font = new Font("Tahoma", 16, FontStyle.Bold),
-                ForeColor = Color.SteelBlue,
-                Dock = DockStyle.Top,
-                Height = 40,
-                TextAlign = ContentAlignment.MiddleLeft
-            };
-            painel13.Controls.Add(titulo);
 
             FlowLayoutPanel flow = new FlowLayoutPanel
             {
@@ -1427,12 +1244,10 @@ namespace App
                 FlatStyle = FlatStyle.Flat
             };
 
-            // Eventos dos botões
             btnPortfolio.Click += (s, e) => ShowPortfoliosDoArtista();
             btnCursos.Click += (s, e) => ShowCursosDoArtista();
-            btnTurmas.Click += (s, e) => MessageBox.Show("Gerir Turmas (por implementar)");
+            btnTurmas.Click += (s, e) => ShowTurmasDoArtista();
 
-            // Adicionar ao painel
             flow.Controls.Add(btnPortfolio);
             flow.Controls.Add(btnCursos);
             flow.Controls.Add(btnTurmas);
@@ -1451,17 +1266,6 @@ namespace App
             painel13.Dock = DockStyle.Fill;
             painel13.Padding = new Padding(20);
 
-            Label titulo = new Label
-            {
-                Text = "Seus Portfólios",
-                Font = new Font("Tahoma", 14, FontStyle.Bold),
-                ForeColor = Color.SteelBlue,
-                Dock = DockStyle.Top,
-                Height = 40,
-                TextAlign = ContentAlignment.MiddleLeft
-            };
-            painel13.Controls.Add(titulo);
-
             FlowLayoutPanel lista = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
@@ -1473,12 +1277,31 @@ namespace App
 
             List<PortfolioInfo> portfolios = GetPortfoliosDoArtista(idUtilizadorAtual);
 
+            // Botão Novo Portfólio
+            System.Windows.Forms.Button btnNovoPortfolio = new System.Windows.Forms.Button
+            {
+                Text = "➕ Novo Portfólio",
+                Size = new Size(150, 40),
+                BackColor = Color.SteelBlue,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Tahoma", 10, FontStyle.Bold),
+                Margin = new Padding(0, 0, 0, 15)
+            };
+
+            btnNovoPortfolio.Click += (s, e) =>
+            {
+                MostrarFormularioPortfolio();
+            };
+
+            painel13.Controls.Add(btnNovoPortfolio);
+
             foreach (var portfolio in portfolios)
             {
                 Panel portfolioPanel = new Panel
                 {
                     Width = 700,
-                    Height = 60,
+                    Height = 100,
                     BackColor = Color.White,
                     Margin = new Padding(0, 0, 0, 10),
                     Padding = new Padding(10),
@@ -1490,40 +1313,374 @@ namespace App
                     Text = $"#{portfolio.Id} - {portfolio.Nome}",
                     Font = new Font("Tahoma", 11, FontStyle.Bold),
                     ForeColor = Color.FromArgb(25, 25, 112),
-                    Dock = DockStyle.Fill,
-                    TextAlign = ContentAlignment.MiddleLeft
+                    Location = new Point(10, 10),
+                    AutoSize = true
                 };
 
+                // Botão Editar
+                System.Windows.Forms.Button btnEditar = new System.Windows.Forms.Button
+                {
+                    Text = "Editar",
+                    Size = new Size(80, 30),
+                    Location = new Point(portfolioPanel.Width - 190, 50),
+                    BackColor = Color.SteelBlue,
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Font = new Font("Tahoma", 8, FontStyle.Bold),
+                    Tag = portfolio
+                };
+
+                btnEditar.Click += (s, e) =>
+                {
+                    PortfolioInfo p = (PortfolioInfo)((System.Windows.Forms.Button)s).Tag;
+                    MostrarFormularioPortfolio(p);
+                };
+
+                // Botão Eliminar
+                System.Windows.Forms.Button btnApagar = new System.Windows.Forms.Button
+                {
+                    Text = "Eliminar",
+                    Size = new Size(80, 30),
+                    Location = new Point(portfolioPanel.Width - 100, 50),
+                    BackColor = Color.Firebrick,
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Font = new Font("Tahoma", 8, FontStyle.Bold),
+                    Tag = portfolio.Id
+                };
+
+                btnApagar.Click += (s, e) =>
+                {
+                    int id = (int)((System.Windows.Forms.Button)s).Tag;
+                    var confirm = MessageBox.Show("Tem certeza que deseja apagar este portfólio?", "Confirmação", MessageBoxButtons.YesNo);
+                    if (confirm == DialogResult.Yes)
+                    {
+                        ApagarPortfolio(id);
+                    }
+                };
+
+                System.Windows.Forms.Button btnVerTrabalhos = new System.Windows.Forms.Button
+                {
+                    Text = "Ver Trabalhos",
+                    Size = new Size(120, 30),
+                    BackColor = Color.SteelBlue,
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Font = new Font("Tahoma", 9, FontStyle.Bold),
+                    Tag = portfolio.Id, 
+                    Location = new Point(portfolioPanel.Width - 140, 10)
+                };
+
+                btnVerTrabalhos.Click += (s, e) =>
+                {
+                    int portfolioId = (int)((System.Windows.Forms.Button)s).Tag;
+                    MostrarTrabalhosDoPortfolio(portfolioId);
+                };
+
+
+                portfolioPanel.Controls.Add(btnVerTrabalhos);
                 portfolioPanel.Controls.Add(nomeLabel);
+                portfolioPanel.Controls.Add(btnEditar);
+                portfolioPanel.Controls.Add(btnApagar);
                 lista.Controls.Add(portfolioPanel);
             }
-
 
             painel13.Controls.Add(lista);
         }
 
-        private void ShowCursosDoArtista()
+        private void MostrarTrabalhosDoPortfolio(int idPortfolio)
         {
-            if (idUtilizadorAtual == 0)
-            {
-                MessageBox.Show("É necessário estar logado como artista para ver seus cursos.");
-                return;
-            }
-
             painel13.Controls.Clear();
             painel13.Dock = DockStyle.Fill;
             painel13.Padding = new Padding(20);
 
             Label titulo = new Label
             {
-                Text = "Seus Cursos",
+                Text = $"Trabalhos do Portfólio #{idPortfolio}",
                 Font = new Font("Tahoma", 14, FontStyle.Bold),
                 ForeColor = Color.SteelBlue,
                 Dock = DockStyle.Top,
                 Height = 40,
                 TextAlign = ContentAlignment.MiddleLeft
             };
+
             painel13.Controls.Add(titulo);
+
+            FlowLayoutPanel lista = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.TopDown,
+                AutoScroll = true,
+                WrapContents = false,
+                Padding = new Padding(10)
+            };
+
+            List<TrabalhoInfo> trabalhos = GetTrabalhosDoPortfolio(idPortfolio);
+
+            foreach (var trabalho in trabalhos)
+            {
+                Panel trabalhoPanel = new Panel
+                {
+                    Width = 700,
+                    Height = 100,
+                    BackColor = Color.White,
+                    Margin = new Padding(0, 0, 0, 10),
+                    Padding = new Padding(10),
+                    BorderStyle = BorderStyle.FixedSingle
+                };
+
+                Label tituloLabel = new Label
+                {
+                    Text = $"#{trabalho.Id} - {trabalho.Titulo}",
+                    Font = new Font("Tahoma", 11, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(25, 25, 112),
+                    Location = new Point(10, 10),
+                    AutoSize = true
+                };
+
+                Label precoLabel = new Label
+                {
+                    Text = $"Preço: {trabalho.Preco:C} | Disponibilidade: {trabalho.Disponibilidade}",
+                    Font = new Font("Tahoma", 9),
+                    Location = new Point(10, 40),
+                    AutoSize = true
+                };
+
+                Label descricaoLabel = new Label
+                {
+                    Text = $"Descrição: {trabalho.Descricao}",
+                    Font = new Font("Tahoma", 9),
+                    Location = new Point(10, 65),
+                    AutoSize = true
+                };
+
+                trabalhoPanel.Controls.Add(tituloLabel);
+                trabalhoPanel.Controls.Add(precoLabel);
+                trabalhoPanel.Controls.Add(descricaoLabel);
+
+                lista.Controls.Add(trabalhoPanel);
+            }
+
+            painel13.Controls.Add(lista);
+        }
+
+
+        private void ApagarPortfolio(int idPortfolio)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("sp_GerirPortfolio", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@Id", idPortfolio);
+                cmd.Parameters.AddWithValue("@Nome", ""); // dummy
+                cmd.Parameters.AddWithValue("@ArtistaId", idUtilizadorAtual);
+                cmd.Parameters.AddWithValue("@Acao", "REMOVER");
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+            MessageBox.Show("Portfólio eliminado com sucesso!", "Sucesso");
+            ShowPortfoliosDoArtista(); // Recarrega
+        }
+
+        private void MostrarFormularioPortfolio(PortfolioInfo portfolio = null)
+        {
+            var oldPanel = painel13.Controls.OfType<Panel>().FirstOrDefault(p => p.BackColor == Color.AliceBlue);
+            if (oldPanel != null)
+            {
+                painel13.Controls.Remove(oldPanel);
+            }
+
+            Panel formPanel = new Panel
+            {
+                Width = 700,
+                Height = 150,
+                BackColor = Color.AliceBlue,
+                BorderStyle = BorderStyle.FixedSingle,
+                Padding = new Padding(10),
+                Margin = new Padding(0, 0, 0, 10)
+            };
+
+            TextBox txtNome = new TextBox { Width = 300 };
+
+            if (portfolio != null)
+            {
+                txtNome.Text = portfolio.Nome;
+            }
+
+            System.Windows.Forms.Button btnGuardar = new System.Windows.Forms.Button
+            {
+                Text = portfolio == null ? "Adicionar" : "Atualizar",
+                BackColor = Color.Teal,
+                ForeColor = Color.White,
+                Font = new Font("Tahoma", 9, FontStyle.Bold),
+                Width = 100,
+                Height = 35
+            };
+
+            btnGuardar.Click += (s, e) =>
+            {
+                string nome = txtNome.Text.Trim();
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_GerirPortfolio", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    int idPortfolio = portfolio == null ? ObterProximoIdDisponivel("Portfolio") : portfolio.Id;
+
+                    cmd.Parameters.AddWithValue("@Id", idPortfolio);
+                    cmd.Parameters.AddWithValue("@Nome", nome);
+                    cmd.Parameters.AddWithValue("@ArtistaId", idUtilizadorAtual);
+                    cmd.Parameters.AddWithValue("@Acao", portfolio == null ? "INSERIR" : "ATUALIZAR");
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                MessageBox.Show("Portfólio salvo com sucesso!", "Sucesso");
+                ShowPortfoliosDoArtista(); // Recarrega
+            };
+
+            // Layout
+            FlowLayoutPanel inputs = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.TopDown,
+                AutoScroll = true,
+                WrapContents = false,
+                Padding = new Padding(10)
+            };
+
+            inputs.Controls.Add(new Label
+            {
+                Text = "Nome do Portfólio *",
+                Font = new Font("Tahoma", 9, FontStyle.Bold),
+                ForeColor = Color.Black,
+                AutoSize = true
+            });
+            inputs.Controls.Add(txtNome);
+            inputs.Controls.Add(btnGuardar);
+
+            formPanel.Controls.Add(inputs);
+            painel13.Controls.Add(formPanel);
+            painel13.Controls.SetChildIndex(formPanel, 0);
+        }
+
+
+        private List<PortfolioInfo> GetPortfoliosDoArtista(int idArtista)
+        {
+            List<PortfolioInfo> lista = new List<PortfolioInfo>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "SELECT id, nome FROM projeto.Portfolio WHERE artista = @id";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", idArtista);
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        lista.Add(new PortfolioInfo
+                        {
+                            Id = reader.GetInt32(0),
+                            Nome = reader.GetString(1)
+                        });
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+        private List<TrabalhoInfo> GetTrabalhosDoPortfolio(int idPortfolio)
+        {
+            List<TrabalhoInfo> lista = new List<TrabalhoInfo>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("sp_GetTrabalhosDoPortfolio", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PortfolioId", idPortfolio);
+
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        lista.Add(new TrabalhoInfo
+                        {
+                            Id = reader.GetInt32(0),
+                            Titulo = reader.GetString(1),
+                            Descricao = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                            Preco = reader.GetDecimal(4),
+                            Disponibilidade = reader.GetString(5)
+                        });
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+
+        private List<CursoInfo> GetCursosDoArtista(int idArtista)
+        {
+            List<CursoInfo> lista = new List<CursoInfo>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = @"
+            SELECT c.id, c.nome, c.preco, c.descricao, c.data_inicio, c.data_fim,
+                   c.formato, c.capacidade, u.nome as nome_artista
+            FROM projeto.Curso c
+            INNER JOIN projeto.Artista a ON c.id_artista = a.id
+            INNER JOIN projeto.Utilizador u ON a.id = u.id
+            WHERE a.id = @idArtista";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@idArtista", idArtista);
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        lista.Add(new CursoInfo
+                        {
+                            Id = reader.GetInt32(0),
+                            NomeCurso = reader.GetString(1),
+                            Preco = reader.GetDecimal(2),
+                            Descricao = reader.IsDBNull(3) ? "Sem descrição" : reader.GetString(3),
+                            DataInicio = reader.GetDateTime(4),
+                            DataFim = reader.GetDateTime(5),
+                            Formato = reader.IsDBNull(6) ? "N/A" : reader.GetString(6),
+                            Capacidade = reader.GetInt32(7),
+                            NomeArtista = reader.GetString(8)
+                        });
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+        private void ShowCursosDoArtista()
+        {
+            if (idUtilizadorAtual == 0)
+            {
+                MessageBox.Show("É necessário iniciar sessão para ver os seus cursos.");
+                return;
+            }
+
+            painel13.Controls.Clear();
+            painel13.Dock = DockStyle.Fill;
+            painel13.Padding = new Padding(20);
 
             FlowLayoutPanel lista = new FlowLayoutPanel
             {
@@ -1536,12 +1693,32 @@ namespace App
 
             List<CursoInfo> cursos = GetCursosDoArtista(idUtilizadorAtual);
 
+            // Botão Novo Curso
+            System.Windows.Forms.Button btnNovoCurso = new System.Windows.Forms.Button
+            {
+                Text = "➕ Novo Curso",
+                Size = new Size(150, 40),
+                BackColor = Color.SteelBlue,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Tahoma", 10, FontStyle.Bold),
+                Margin = new Padding(0, 0, 0, 15)
+            };
+
+            btnNovoCurso.Click += (s, e) =>
+            {
+                MostrarFormularioCurso();
+            };
+
+            painel13.Controls.Add(btnNovoCurso);
+
+            // Listar Cursos
             foreach (var curso in cursos)
             {
                 Panel cursoPanel = new Panel
                 {
                     Width = 700,
-                    Height = 120,
+                    Height = 180,
                     BackColor = Color.White,
                     Margin = new Padding(0, 0, 0, 10),
                     Padding = new Padding(10),
@@ -1581,18 +1758,654 @@ namespace App
                     Height = 40
                 };
 
+                // Botão Editar
+                System.Windows.Forms.Button btnEditar = new System.Windows.Forms.Button
+                {
+                    Text = "Editar",
+                    Size = new Size(80, 30),
+                    Location = new Point(cursoPanel.Width - 190, 120),
+                    BackColor = Color.SteelBlue,
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Font = new Font("Tahoma", 8, FontStyle.Bold),
+                    Tag = curso
+                };
+
+                btnEditar.Click += (s, e) =>
+                {
+                    CursoInfo c = (CursoInfo)((System.Windows.Forms.Button)s).Tag;
+                    MostrarFormularioCurso(c);
+                };
+
+                // Botão Apagar
+                System.Windows.Forms.Button btnApagar = new System.Windows.Forms.Button
+                {
+                    Text = "Eliminar",
+                    Size = new Size(80, 30),
+                    Location = new Point(cursoPanel.Width - 100, 120),
+                    BackColor = Color.Firebrick,
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Font = new Font("Tahoma", 8, FontStyle.Bold),
+                    Tag = curso.Id
+                };
+
+                btnApagar.Click += (s, e) =>
+                {
+                    int id = (int)((System.Windows.Forms.Button)s).Tag;
+                    var confirm = MessageBox.Show("Tem certeza que deseja apagar este curso?", "Confirmação", MessageBoxButtons.YesNo);
+                    if (confirm == DialogResult.Yes)
+                    {
+                        ApagarCurso(id);
+                        ShowCursosDoArtista();
+                    }
+                };
+
                 cursoPanel.Controls.Add(descLabel);
                 cursoPanel.Controls.Add(capacidadeLabel);
                 cursoPanel.Controls.Add(dataLabel);
                 cursoPanel.Controls.Add(nomeLabel);
+                cursoPanel.Controls.Add(btnEditar);
+                cursoPanel.Controls.Add(btnApagar);
                 lista.Controls.Add(cursoPanel);
             }
-
 
             painel13.Controls.Add(lista);
         }
 
+        private void ApagarCurso(int idCurso)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("sp_GerirCurso", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
 
+                cmd.Parameters.AddWithValue("@Id", idCurso);
+                cmd.Parameters.AddWithValue("@Nome", "");
+                cmd.Parameters.AddWithValue("@Preco", 0);
+                cmd.Parameters.AddWithValue("@Descricao", "");
+                cmd.Parameters.AddWithValue("@DataInicio", DateTime.Now);
+                cmd.Parameters.AddWithValue("@DataFim", DateTime.Now);
+                cmd.Parameters.AddWithValue("@Formato", "");
+                cmd.Parameters.AddWithValue("@Capacidade", 0);
+                cmd.Parameters.AddWithValue("@IdArtista", idUtilizadorAtual);
+                cmd.Parameters.AddWithValue("@Acao", "REMOVER");
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+            MessageBox.Show("Curso eliminado com sucesso!", "Sucesso");
+        }
+
+        private void MostrarFormularioCurso(CursoInfo curso = null)
+        {
+            // Remover se já houver um painel aberto
+            var oldPanel = painel13.Controls.OfType<Panel>().FirstOrDefault(p => p.BackColor == Color.AliceBlue);
+            if (oldPanel != null)
+            {
+                painel13.Controls.Remove(oldPanel);
+            }
+
+            Panel formPanel = new Panel
+            {
+                Width = 700,
+                Height = 400,
+                BackColor = Color.AliceBlue,
+                BorderStyle = BorderStyle.FixedSingle,
+                Padding = new Padding(10),
+                Margin = new Padding(0, 0, 0, 10)
+            };
+
+            TextBox txtNome = new TextBox { Width = 300 };
+            NumericUpDown numPreco = new NumericUpDown { Minimum = 0, Maximum = 10000, DecimalPlaces = 2, Value = 10, Width = 100 };
+            TextBox txtDescricao = new TextBox { Width = 300, Height = 60, Multiline = true };
+            DateTimePicker dtInicio = new DateTimePicker { Format = DateTimePickerFormat.Short, Width = 120 };
+            DateTimePicker dtFim = new DateTimePicker { Format = DateTimePickerFormat.Short, Width = 120 };
+            ComboBox comboFormato = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 150 };
+            comboFormato.Items.AddRange(new[] { "Presencial", "Online", "Híbrido" });
+            NumericUpDown numCapacidade = new NumericUpDown { Minimum = 1, Maximum = 100, Value = 10, Width = 100 };
+
+            System.Windows.Forms.Button btnGuardar = new System.Windows.Forms.Button
+            {
+                Text = curso == null ? "Adicionar" : "Atualizar",
+                BackColor = Color.Teal,
+                ForeColor = Color.White,
+                Font = new Font("Tahoma", 9, FontStyle.Bold),
+                Width = 100,
+                Height = 35
+            };
+
+            // Se estiver a editar, preenche os campos
+            if (curso != null)
+            {
+                txtNome.Text = curso.NomeCurso;
+                numPreco.Value = curso.Preco;
+                txtDescricao.Text = curso.Descricao;
+                dtInicio.Value = curso.DataInicio;
+                dtFim.Value = curso.DataFim;
+                comboFormato.SelectedItem = curso.Formato;
+                numCapacidade.Value = curso.Capacidade;
+            }
+
+            btnGuardar.Click += (s, e) =>
+            {
+                string nome = txtNome.Text.Trim();
+                decimal preco = numPreco.Value;
+                string descricao = txtDescricao.Text.Trim();
+                DateTime dataInicio = dtInicio.Value.Date;
+                DateTime dataFim = dtFim.Value.Date;
+                string formato = comboFormato.Text;
+                int capacidade = (int)numCapacidade.Value;
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_GerirCurso", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    int idCurso = curso == null ? ObterProximoIdDisponivel("Curso") : curso.Id;
+
+                    cmd.Parameters.AddWithValue("@Id", idCurso);
+                    cmd.Parameters.AddWithValue("@Nome", nome);
+                    cmd.Parameters.AddWithValue("@Preco", preco);
+                    cmd.Parameters.AddWithValue("@Descricao", descricao);
+                    cmd.Parameters.AddWithValue("@DataInicio", dataInicio);
+                    cmd.Parameters.AddWithValue("@DataFim", dataFim);
+                    cmd.Parameters.AddWithValue("@Formato", formato);
+                    cmd.Parameters.AddWithValue("@Capacidade", capacidade);
+                    cmd.Parameters.AddWithValue("@IdArtista", idUtilizadorAtual);
+
+                    string acao = curso == null ? "INSERIR" : "ATUALIZAR";
+                    cmd.Parameters.AddWithValue("@Acao", acao);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                MessageBox.Show("Curso salvo com sucesso!", "Sucesso");
+                ShowCursosDoArtista(); // Recarrega
+            };
+
+            // Layout
+            FlowLayoutPanel inputs = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.TopDown,
+                AutoScroll = true,
+                WrapContents = false,
+                Padding = new Padding(10)
+            };
+
+            // Nome
+            inputs.Controls.Add(new Label
+            {
+                Text = "Nome do Curso *",
+                Font = new Font("Tahoma", 9, FontStyle.Bold),
+                ForeColor = Color.Black,
+                AutoSize = true
+            });
+            inputs.Controls.Add(txtNome);
+
+            // Preço
+            inputs.Controls.Add(new Label
+            {
+                Text = "Preço (€) *",
+                Font = new Font("Tahoma", 9, FontStyle.Bold),
+                ForeColor = Color.Black,
+                AutoSize = true
+            });
+            inputs.Controls.Add(numPreco);
+
+            // Descrição
+            inputs.Controls.Add(new Label
+            {
+                Text = "Descrição",
+                Font = new Font("Tahoma", 9, FontStyle.Bold),
+                ForeColor = Color.Black,
+                AutoSize = true
+            });
+            inputs.Controls.Add(txtDescricao);
+
+            // Datas
+            inputs.Controls.Add(new Label
+            {
+                Text = "Data Início *",
+                Font = new Font("Tahoma", 9, FontStyle.Bold),
+                ForeColor = Color.Black,
+                AutoSize = true
+            });
+            inputs.Controls.Add(dtInicio);
+
+            inputs.Controls.Add(new Label
+            {
+                Text = "Data Fim *",
+                Font = new Font("Tahoma", 9, FontStyle.Bold),
+                ForeColor = Color.Black,
+                AutoSize = true
+            });
+            inputs.Controls.Add(dtFim);
+
+            // Formato
+            inputs.Controls.Add(new Label
+            {
+                Text = "Formato *",
+                Font = new Font("Tahoma", 9, FontStyle.Bold),
+                ForeColor = Color.Black,
+                AutoSize = true
+            });
+            inputs.Controls.Add(comboFormato);
+
+            // Capacidade
+            inputs.Controls.Add(new Label
+            {
+                Text = "Capacidade *",
+                Font = new Font("Tahoma", 9, FontStyle.Bold),
+                ForeColor = Color.Black,
+                AutoSize = true
+            });
+            inputs.Controls.Add(numCapacidade);
+
+            // Botão Guardar
+            inputs.Controls.Add(btnGuardar);
+
+            formPanel.Controls.Add(inputs);
+            painel13.Controls.Add(formPanel);
+            painel13.Controls.SetChildIndex(formPanel, 0);
+        }
+
+
+
+
+        private List<TurmaInfo> GetTurmasDoArtista(int idArtista)
+        {
+            List<TurmaInfo> lista = new List<TurmaInfo>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = @"
+                                SELECT t.id, t.nome, t.capacidade, t.nivel, t.horario, c.nome AS nome_curso
+                                FROM projeto.Turma t
+                                INNER JOIN projeto.Curso c ON t.id_curso = c.id
+                                WHERE c.id_artista = @idArtista";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@idArtista", idArtista);
+                conn.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        lista.Add(new TurmaInfo
+                        {
+                            Id = reader.GetInt32(0),
+                            NomeTurma = reader.GetString(1),
+                            Capacidade = reader.GetInt32(2),
+                            Nivel = reader.GetString(3),
+                            Horario = reader.GetString(4),
+                            NomeCurso = reader.GetString(5)
+                        });
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+    private void ShowTurmasDoArtista()
+    {
+        if (idUtilizadorAtual == 0)
+        {
+            MessageBox.Show("É necessário iniciar sessão para ver as suas turmas.");
+            return;
+        }
+
+        painel13.Controls.Clear();
+        painel13.Dock = DockStyle.Fill;
+        painel13.Padding = new Padding(20);
+
+        FlowLayoutPanel lista = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Fill,
+            FlowDirection = FlowDirection.TopDown,
+            AutoScroll = true,
+            WrapContents = false,
+            Padding = new Padding(10)
+        };
+
+        List<TurmaInfo> turmas = GetTurmasDoArtista(idUtilizadorAtual);
+
+            System.Windows.Forms.Button btnNovaTurma = new System.Windows.Forms.Button
+            {
+                Text = "➕ Nova Turma",
+                Size = new Size(150, 40),
+                BackColor = Color.SteelBlue,
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Tahoma", 10, FontStyle.Bold),
+                Margin = new Padding(0, 0, 0, 15)
+            };
+
+
+            btnNovaTurma.Click += (s, e) =>
+            {
+                MostrarFormularioTurma();
+            };
+
+            painel13.Controls.Add(btnNovaTurma);
+
+
+            foreach (var turma in turmas)
+            {
+                Panel turmaPanel = new Panel
+                {
+                    Width = 700,
+                    Height = 140,
+                    BackColor = Color.White,
+                    Margin = new Padding(0, 0, 0, 10),
+                    Padding = new Padding(10),
+                    BorderStyle = BorderStyle.FixedSingle
+                };
+
+                Label nomeLabel = new Label
+                {
+                    Text = $"#{turma.Id} - {turma.NomeTurma}  |  Curso: {turma.NomeCurso}",
+                    Font = new Font("Tahoma", 11, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(25, 25, 112),
+                    Location = new Point(10, 10),
+                    AutoSize = true
+                };
+
+                Label capLabel = new Label
+                {
+                    Text = $"Capacidade: {turma.Capacidade}",
+                    Font = new Font("Tahoma", 9),
+                    Location = new Point(10, 40),
+                    AutoSize = true
+                };
+
+                Label nivelHorario = new Label
+                {
+                    Text = $"Nível: {turma.Nivel}   |   Horário: {turma.Horario}",
+                    Font = new Font("Tahoma", 9),
+                    Location = new Point(10, 65),
+                    AutoSize = true
+                };
+
+                // Botão Editar
+                System.Windows.Forms.Button btnEditar = new System.Windows.Forms.Button
+                {
+                    Text = "Editar",
+                    Size = new Size(80, 30),
+                    Location = new Point(turmaPanel.Width - 190, 90),
+                    BackColor = Color.SteelBlue,
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Font = new Font("Tahoma", 8, FontStyle.Bold),
+                    Tag = turma
+                };
+
+                btnEditar.Click += (s, e) =>
+                {
+                    TurmaInfo t = (TurmaInfo)((System.Windows.Forms.Button)s).Tag;
+                    MostrarFormularioTurma(t);
+                };
+
+
+                // Botão Apagar
+                System.Windows.Forms.Button btnApagar = new System.Windows.Forms.Button
+                {
+                    Text = "Eliminar",
+                    Size = new Size(80, 30),
+                    Location = new Point(turmaPanel.Width - 100, 90),
+                    BackColor = Color.Firebrick,
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Font = new Font("Tahoma", 8, FontStyle.Bold),
+                    Tag = turma.Id
+                };
+
+                btnApagar.Click += (s, e) =>
+                {
+                    int id = (int)((System.Windows.Forms.Button)s).Tag;
+                    var confirm = MessageBox.Show("Tem certeza que deseja apagar esta turma?", "Confirmação", MessageBoxButtons.YesNo);
+                    if (confirm == DialogResult.Yes)
+                    {
+                        ApagarTurma(id);
+                    }
+                };
+
+
+                // Adicionar controls
+                turmaPanel.Controls.Add(nomeLabel);
+                turmaPanel.Controls.Add(capLabel);
+                turmaPanel.Controls.Add(nivelHorario);
+                turmaPanel.Controls.Add(btnEditar);
+                turmaPanel.Controls.Add(btnApagar);
+                lista.Controls.Add(turmaPanel);
+
+            }
+            painel13.Controls.Add(lista);
+    }
+
+        private void ApagarTurma(int idTurma)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("sp_GerirTurma", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@Id", idTurma);
+                cmd.Parameters.AddWithValue("@Nome", "");
+                cmd.Parameters.AddWithValue("@Capacidade", 0); 
+                cmd.Parameters.AddWithValue("@Nivel", "");
+                cmd.Parameters.AddWithValue("@Horario", "");
+                cmd.Parameters.AddWithValue("@CursoId", 0); 
+                cmd.Parameters.AddWithValue("@Acao", "REMOVER");
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
+            MessageBox.Show("Turma eliminada com sucesso!", "Sucesso");
+            ShowTurmasDoArtista(); // Recarrega
+        }
+
+
+        private void MostrarFormularioTurma(TurmaInfo turma = null)
+            {
+
+            var oldPanel = painel13.Controls.OfType<Panel>().FirstOrDefault(p => p.BackColor == Color.AliceBlue);
+            if (oldPanel != null)
+            {
+                painel13.Controls.Remove(oldPanel);
+            }
+            Panel formPanel = new Panel
+                {
+                    Width = 700,
+                    Height = 220,
+                    BackColor = Color.AliceBlue,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Padding = new Padding(10),
+                    Margin = new Padding(0, 0, 0, 10)
+                };
+
+                TextBox txtNome = new TextBox {Width = 300 };
+                NumericUpDown numCapacidade = new NumericUpDown { Minimum = 1, Maximum = 100, Value = 10 };
+                ComboBox comboNivel = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 150 };
+                comboNivel.Items.AddRange(new[] { "Iniciante", "Intermédio", "Avançado" });
+
+                TextBox txtHorario = new TextBox {Width = 300 };
+                ComboBox comboCurso = new ComboBox { Width = 300, DropDownStyle = ComboBoxStyle.DropDownList };
+
+                System.Windows.Forms.Button btnGuardar = new System.Windows.Forms.Button
+                {
+                    Text = turma == null ? "Adicionar" : "Atualizar",
+                    BackColor = Color.Teal,
+                    ForeColor = Color.White,
+                    Font = new Font("Tahoma", 9, FontStyle.Bold),
+                    Width = 100,
+                    Height = 35
+                };
+
+                // Preencher cursos
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    string query = "SELECT id, nome FROM projeto.Curso WHERE id_artista = @id";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@id", idUtilizadorAtual);
+                    conn.Open();
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            comboCurso.Items.Add(new ComboBoxItem
+                            {
+                                Text = reader.GetString(1),
+                                Value = reader.GetInt32(0)
+                            });
+                        }
+                    }
+                }
+
+                // Se estiver a editar, preenche os campos
+                if (turma != null)
+                {
+                    txtNome.Text = turma.NomeTurma;
+                    numCapacidade.Value = turma.Capacidade;
+                    comboNivel.SelectedItem = turma.Nivel;
+                    txtHorario.Text = turma.Horario;
+
+                    foreach (ComboBoxItem item in comboCurso.Items)
+                    {
+                        if ((int)item.Value == turma.IdCurso)
+                        {
+                            comboCurso.SelectedItem = item;
+                            break;
+                        }
+                    }
+                }
+
+
+            btnGuardar.Click += (s, e) =>
+                {
+                    string nome = txtNome.Text.Trim();
+                    string nivel = comboNivel.Text;
+                    string horario = txtHorario.Text.Trim();
+                    int capacidade = (int)numCapacidade.Value;
+                    int idCurso = ((ComboBoxItem)comboCurso.SelectedItem).Value;
+
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                        SqlCommand cmd = new SqlCommand("sp_GerirTurma", conn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        int idTurma = turma == null ? ObterProximoIdDisponivel("Turma") : turma.Id;
+
+                        cmd.Parameters.AddWithValue("@Id", idTurma);
+                        cmd.Parameters.AddWithValue("@Nome", nome);
+                        cmd.Parameters.AddWithValue("@Capacidade", capacidade);
+                        cmd.Parameters.AddWithValue("@Nivel", nivel);
+                        cmd.Parameters.AddWithValue("@Horario", horario);
+                        cmd.Parameters.AddWithValue("@CursoId", idCurso);
+
+                        string acao = turma == null ? "INSERIR" : "ATUALIZAR";
+                        cmd.Parameters.AddWithValue("@Acao", acao);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+
+
+                    MessageBox.Show("Turma salva com sucesso!", "Sucesso");
+                    ShowTurmasDoArtista(); // Recarrega
+                };
+
+            // Layout
+            FlowLayoutPanel inputs = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.TopDown,
+                AutoScroll = true,
+                WrapContents = false,
+                Padding = new Padding(10)
+            };
+
+            // Label + TextBox Nome
+            inputs.Controls.Add(new Label
+            {
+                Text = "Nome da Turma *",
+                Font = new Font("Tahoma", 9, FontStyle.Bold),
+                ForeColor = Color.Black,
+                AutoSize = true
+            });
+            inputs.Controls.Add(txtNome);
+
+            // Label + Capacidade
+            inputs.Controls.Add(new Label
+            {
+                Text = "Capacidade *",
+                Font = new Font("Tahoma", 9, FontStyle.Bold),
+                ForeColor = Color.Black,
+                AutoSize = true
+            });
+            inputs.Controls.Add(numCapacidade);
+
+            // Label + Nível
+            inputs.Controls.Add(new Label
+            {
+                Text = "Nível *",
+                Font = new Font("Tahoma", 9, FontStyle.Bold),
+                ForeColor = Color.Black,
+                AutoSize = true
+            });
+            inputs.Controls.Add(comboNivel);
+
+            // Label + Horário
+            inputs.Controls.Add(new Label
+            {
+                Text = "Horário *",
+                Font = new Font("Tahoma", 9, FontStyle.Bold),
+                ForeColor = Color.Black,
+                AutoSize = true
+            });
+            inputs.Controls.Add(txtHorario);
+
+            // Label + Curso
+            inputs.Controls.Add(new Label
+            {
+                Text = "Curso *",
+                Font = new Font("Tahoma", 9, FontStyle.Bold),
+                ForeColor = Color.Black,
+                AutoSize = true
+            });
+            inputs.Controls.Add(comboCurso);
+
+            // Botão Guardar
+            inputs.Controls.Add(btnGuardar);
+
+
+            inputs.Controls.Add(txtNome);
+            inputs.Controls.Add(numCapacidade);
+            inputs.Controls.Add(comboNivel);
+            inputs.Controls.Add(txtHorario);
+            inputs.Controls.Add(comboCurso);
+            inputs.Controls.Add(btnGuardar);
+
+            formPanel.Controls.Add(inputs);
+            painel13.Controls.Add(formPanel);
+            painel13.Controls.SetChildIndex(formPanel, 0);
+        }
+
+        private int ObterProximoIdDisponivel(string tabela)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand($"SELECT ISNULL(MAX(id), 0) + 1 FROM {tabela}", conn);
+                return (int)cmd.ExecuteScalar();
+            }
+        }
 
 
 
@@ -1762,6 +2575,20 @@ namespace App
     {
         public int Id { get; set; }
         public string Nome { get; set; }
+
+        public List<TrabalhoInfo> Trabalhos { get; set; }
     }
+
+    public class TurmaInfo
+    {
+        public int Id { get; set; }
+        public string NomeTurma { get; set; }
+        public int Capacidade { get; set; }
+        public string Nivel { get; set; }
+        public string Horario { get; set; }
+        public string NomeCurso { get; set; }
+        public int IdCurso { get; set; }
+    }
+
 
 }
