@@ -918,11 +918,20 @@ namespace App
                         {
                             idUtilizadorAtual = SessaoUtilizador.Id;
                             UpdateUIAfterLogin();
+                            // Abrir Form2 após login bem-sucedido
+                            using (var form = new Form2(curso.Id, idUtilizadorAtual))
+                            {
+                                form.ShowDialog();
+                            }
                         }
-                        using (var form = new Form2(curso.Id, idUtilizadorAtual))
-                        {
-                            form.ShowDialog();
-                        }
+                    }
+                }
+                else
+                {
+                    // Utilizador já está logado - abrir Form2 diretamente
+                    using (var form = new Form2(curso.Id, idUtilizadorAtual))
+                    {
+                        form.ShowDialog();
                     }
                 }
             };
